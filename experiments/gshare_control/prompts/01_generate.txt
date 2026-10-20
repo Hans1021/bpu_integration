@@ -1,0 +1,31 @@
+Implement the GShare direction predictor described in the attached gshare_spec.md.
+
+Generate one complete synthesizable SystemVerilog module named gshare_llm.
+
+Use these default parameters:
+
+parameter int XLEN = 32
+parameter int K = 10
+
+Follow the interface and behavioral requirements in the specification exactly.
+
+Do not assume access to an existing CORE-V-Wally GShare RTL implementation, and do not reproduce or infer code from one.
+
+Do not generate a testbench.
+
+Before the RTL, briefly list any assumptions you had to make. Do not silently simplify unspecified behavior.
+
+Do not omit difficult functionality. In particular, implement:
+
+- speculative global history
+- correction of speculative history after branch resolution
+- correct handling of stalls and flushes
+- pipelining of the prediction/index needed for later training
+- update of the original PHT entry used by the branch
+- 2-bit saturating-counter training
+- PHT read-after-write forwarding or equivalent hazard handling
+- prevention of duplicate updates during stalls
+
+After listing the assumptions, provide the complete SystemVerilog implementation.
+
+Do not provide pseudocode in place of RTL.

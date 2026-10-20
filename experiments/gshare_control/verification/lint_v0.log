@@ -1,0 +1,94 @@
+%Warning-EOFNEWLINE: experiments/gshare_control/rtl/gshare_llm_v0.sv:576:10: Missing newline at end of file (POSIX 3.206).
+                                                                           : ... Suggest add newline.
+  576 | endmodule
+      |          ^
+                     ... For warning description see https://verilator.org/warn/EOFNEWLINE?v=5.036
+                     ... Use "/* verilator lint_off EOFNEWLINE */" and lint_on around source to disable this message.
+%Warning-DECLFILENAME: experiments/gshare_control/rtl/gshare_llm_v0.sv:1:8: Filename 'gshare_llm_v0' does not match MODULE name: 'gshare_llm'
+    1 | module gshare_llm #(
+      |        ^~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.036
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-ALWCOMBORDER: experiments/gshare_control/rtl/gshare_llm_v0.sv:289:9: Always_comb variable driven after use: 'validD'
+                                                                            : ... note: In instance 'gshare_llm'
+  289 |         validD       = validD;
+      |         ^~~~~~
+                       ... For warning description see https://verilator.org/warn/ALWCOMBORDER?v=5.036
+                       ... Use "/* verilator lint_off ALWCOMBORDER */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: experiments/gshare_control/rtl/gshare_llm_v0.sv:510:13: Variable also written to in always_comb (IEEE 1800-2023 9.2.2.2): 'validD'
+                                                                            : ... note: In instance 'gshare_llm'
+                      experiments/gshare_control/rtl/gshare_llm_v0.sv:510:13: 
+  510 |             validD      <= 1'b0;
+      |             ^~~~~~
+                      experiments/gshare_control/rtl/gshare_llm_v0.sv:289:9: ... Location of always_comb write
+  289 |         validD       = validD;
+      |         ^~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.036
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: experiments/gshare_control/rtl/gshare_llm_v0.sv:553:13: Variable also written to in always_comb (IEEE 1800-2023 9.2.2.2): 'validD'
+                                                                            : ... note: In instance 'gshare_llm'
+                      experiments/gshare_control/rtl/gshare_llm_v0.sv:553:13: 
+  553 |             validD      <= validD_n;
+      |             ^~~~~~
+                      experiments/gshare_control/rtl/gshare_llm_v0.sv:510:13: ... Location of always_comb write
+  510 |             validD      <= 1'b0;
+      |             ^~~~~~
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:11:29: Signal is not used: 'StallM'
+                                                                            : ... note: In instance 'gshare_llm'
+   11 |     input  logic            StallM,
+      |                             ^~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.036
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:12:29: Signal is not used: 'StallW'
+                                                                            : ... note: In instance 'gshare_llm'
+   12 |     input  logic            StallW,
+      |                             ^~~~~~
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:16:29: Signal is not used: 'FlushM'
+                                                                            : ... note: In instance 'gshare_llm'
+   16 |     input  logic            FlushM,
+      |                             ^~~~~~
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:17:29: Signal is not used: 'FlushW'
+                                                                            : ... note: In instance 'gshare_llm'
+   17 |     input  logic            FlushW,
+      |                             ^~~~~~
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:19:29: Signal is not used: 'PCNextF'
+                                                                            : ... note: In instance 'gshare_llm'
+   19 |     input  logic [XLEN-1:0] PCNextF,
+      |                             ^~~~~~~
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:21:29: Signal is not used: 'PCD'
+                                                                            : ... note: In instance 'gshare_llm'
+   21 |     input  logic [XLEN-1:0] PCD,
+      |                             ^~~
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:22:29: Signal is not used: 'PCE'
+                                                                            : ... note: In instance 'gshare_llm'
+   22 |     input  logic [XLEN-1:0] PCE,
+      |                             ^~~
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:23:29: Signal is not used: 'PCM'
+                                                                            : ... note: In instance 'gshare_llm'
+   23 |     input  logic [XLEN-1:0] PCM,
+      |                             ^~~
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:28:29: Signal is not used: 'BranchM'
+                                                                            : ... note: In instance 'gshare_llm'
+   28 |     input  logic            BranchM,
+      |                             ^~~~~~~
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:29:29: Signal is not used: 'BranchW'
+                                                                            : ... note: In instance 'gshare_llm'
+   29 |     input  logic            BranchW,
+      |                             ^~~~~~~
+%Warning-UNUSEDPARAM: experiments/gshare_control/rtl/gshare_llm_v0.sv:45:28: Parameter is not used: 'WEAKLY_T'
+                                                                           : ... note: In instance 'gshare_llm'
+   45 |     localparam logic [1:0] WEAKLY_T    = 2'b10;
+      |                            ^~~~~~~~
+                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.036
+                      ... Use "/* verilator lint_off UNUSEDPARAM */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: experiments/gshare_control/rtl/gshare_llm_v0.sv:124:17: Signal is not used: 'predicted_takenF'
+                                                                             : ... note: In instance 'gshare_llm'
+  124 |     logic       predicted_takenF;
+      |                 ^~~~~~~~~~~~~~~~
+%Warning-LATCH: experiments/gshare_control/rtl/gshare_llm_v0.sv:285:5: Latch inferred for signal 'gshare_llm.validD_n' (not all control paths of combinational always assign a value)
+                                                                     : ... Suggest use of always_latch for intentional latches
+  285 |     always_comb begin
+      |     ^~~~~~~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.036
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Error: Exiting due to 18 warning(s)

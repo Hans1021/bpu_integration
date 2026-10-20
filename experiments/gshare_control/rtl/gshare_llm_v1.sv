@@ -1,0 +1,596 @@
+/*
+ * gshare_llm.sv
+ *
+ * GShare conditional branch direction predictor.
+ *
+ * PHT initialization: weakly not taken (2'b01).
+ * History ordering: newest outcome enters bit 0.
+ *
+ * The externally required pipeline inputs that are not
+ * used by this Execute-resolution implementation are
+ * intentionally retained.
+ */
+
+/* verilator lint_off UNUSEDSIGNAL */
+module gshare_llm #(
+    parameter int XLEN = 32,
+    parameter int K    = 10
+) (
+    input  logic            clk,
+    input  logic            reset,
+
+    input  logic            StallF,
+    input  logic            StallD,
+    input  logic            StallE,
+    input  logic            StallM,
+    input  logic            StallW,
+
+    input  logic            FlushD,
+    input  logic            FlushE,
+    input  logic            FlushM,
+    input  logic            FlushW,
+
+    input  logic [XLEN-1:0] PCNextF,
+    input  logic [XLEN-1:0] PCF,
+    input  logic [XLEN-1:0] PCD,
+    input  logic [XLEN-1:0] PCE,
+    input  logic [XLEN-1:0] PCM,
+
+    input  logic            BPBranchF,
+    input  logic            BranchD,
+    input  logic            BranchE,
+    input  logic            BranchM,
+    input  logic            BranchW,
+
+    input  logic            PCSrcE,
+
+    output logic [1:0]      BPDirF,
+    output logic            BPDirWrongE
+);
+/* verilator lint_on UNUSEDSIGNAL */
+
+    // ---------------------------------------------------------
+    // Parameters and state definitions
+    // ---------------------------------------------------------
+
+    localparam int PHT_ENTRIES = (1 << K);
+
+    localparam logic [1:0] STRONGLY_NT = 2'b00;
+    localparam logic [1:0] WEAKLY_NT   = 2'b01;
+    localparam logic [1:0] STRONGLY_T  = 2'b11;
+
+    // ---------------------------------------------------------
+    // Pattern History Table
+    // ---------------------------------------------------------
+
+    logic [1:0] pht [0:PHT_ENTRIES-1];
+
+    // ---------------------------------------------------------
+    // Global history
+    //
+    // committed_history:
+    //   Actual outcomes of resolved conditional branches.
+    //
+    // speculative_history:
+    //   Committed outcomes followed by surviving unresolved
+    //   speculative predictions, in program order.
+    // ---------------------------------------------------------
+
+    logic [K-1:0] committed_history;
+    logic [K-1:0] speculative_history;
+
+    logic [K-1:0] committed_history_n;
+    logic [K-1:0] speculative_history_n;
+
+    // ---------------------------------------------------------
+    // Prediction state in Decode
+    // ---------------------------------------------------------
+
+    logic         validD;
+    logic         validD_n;
+
+    logic [K-1:0] indexD;
+    logic [K-1:0] indexD_n;
+
+    logic [1:0]   predictionD;
+    logic [1:0]   predictionD_n;
+
+    // Indicates that a held Decode instruction has already
+    // been transferred to Execute.
+    logic consumedD;
+    logic consumedD_n;
+
+    // ---------------------------------------------------------
+    // Prediction state in Execute
+    // ---------------------------------------------------------
+
+    logic         validE;
+    logic         validE_n;
+
+    logic [K-1:0] indexE;
+    logic [K-1:0] indexE_n;
+
+    logic [1:0]   predictionE;
+    logic [1:0]   predictionE_n;
+
+    // A held Execute branch must only train once.
+    logic trainedE;
+    logic trainedE_n;
+
+    // ---------------------------------------------------------
+    // Fetch bookkeeping
+    //
+    // Prevent a held Fetch instruction from being inserted
+    // repeatedly into speculative history.
+    // ---------------------------------------------------------
+
+    logic consumedF;
+    logic consumedF_n;
+
+    // ---------------------------------------------------------
+    // Fetch prediction signals
+    // ---------------------------------------------------------
+
+    logic [K-1:0] hashF;
+    logic [K-1:0] indexF;
+
+    logic [1:0] pht_readF;
+
+    logic acceptF;
+
+    // ---------------------------------------------------------
+    // Execute resolution and PHT update signals
+    // ---------------------------------------------------------
+
+    logic         resolveE;
+    logic         mispredictE;
+
+    logic         update_valid;
+    logic [K-1:0] update_index;
+    logic [1:0]   update_old;
+    logic [1:0]   update_new;
+
+    // ---------------------------------------------------------
+    // History shift function
+    //
+    // Newest branch outcome is stored in bit 0.
+    // ---------------------------------------------------------
+
+    function automatic logic [K-1:0] shift_history(
+        input logic [K-1:0] history,
+        input logic         outcome
+    );
+        shift_history = (history << 1);
+        shift_history[0] = outcome;
+    endfunction
+
+    // ---------------------------------------------------------
+    // Two-bit saturating counter update
+    // ---------------------------------------------------------
+
+    function automatic logic [1:0] saturating_update(
+        input logic [1:0] old_counter,
+        input logic       actual_taken
+    );
+        begin
+            if (actual_taken) begin
+                if (old_counter == STRONGLY_T)
+                    saturating_update = STRONGLY_T;
+                else
+                    saturating_update = old_counter + 2'b01;
+            end
+            else begin
+                if (old_counter == STRONGLY_NT)
+                    saturating_update = STRONGLY_NT;
+                else
+                    saturating_update = old_counter - 2'b01;
+            end
+        end
+    endfunction
+
+    // ---------------------------------------------------------
+    // Fetch PC hash
+    //
+    // hash = {PC[K+1] XOR PC[1], PC[K:2]}
+    //
+    // Including PC[1] supports compressed instruction
+    // alignment.
+    // ---------------------------------------------------------
+
+    always_comb begin
+        hashF = {
+            (PCF[K+1] ^ PCF[1]),
+            PCF[K:2]
+        };
+    end
+
+    // ---------------------------------------------------------
+    // GShare Fetch index
+    // ---------------------------------------------------------
+
+    assign indexF = speculative_history ^ hashF;
+
+    // ---------------------------------------------------------
+    // Execute-stage resolution
+    //
+    // The prediction associated with the original Fetch
+    // lookup is retained in predictionE.
+    //
+    // FlushE affects the next value of the E register, not
+    // the already-resident instruction being resolved.
+    // ---------------------------------------------------------
+
+    assign resolveE =
+        validE &&
+        BranchE &&
+        !trainedE;
+
+    assign mispredictE =
+        resolveE &&
+        (predictionE[1] != PCSrcE);
+
+    assign BPDirWrongE = mispredictE;
+
+    // ---------------------------------------------------------
+    // PHT training
+    //
+    // Always update the original Fetch index carried into E.
+    // Never recompute the training index using current GHR.
+    // ---------------------------------------------------------
+
+    assign update_valid = resolveE;
+    assign update_index = indexE;
+
+    always_comb begin
+        update_old = WEAKLY_NT;
+        update_new = WEAKLY_NT;
+
+        if (update_valid) begin
+            update_old = pht[update_index];
+
+            update_new = saturating_update(
+                update_old,
+                PCSrcE
+            );
+        end
+    end
+
+    // ---------------------------------------------------------
+    // Fetch-stage PHT read with read-after-write forwarding
+    //
+    // When Fetch and Execute access the same PHT entry,
+    // Fetch receives the counter after Execute's update.
+    //
+    // This explicitly handles the same-cycle RAW hazard.
+    // ---------------------------------------------------------
+
+    always_comb begin
+        pht_readF = pht[indexF];
+
+        if (update_valid && (update_index == indexF)) begin
+            pht_readF = update_new;
+        end
+    end
+
+    assign BPDirF = pht_readF;
+
+    // ---------------------------------------------------------
+    // Fetch-stage acceptance
+    //
+    // A branch is speculatively accepted only when it can
+    // enter Decode and has not already been consumed.
+    //
+    // A misprediction suppresses younger Fetch acceptance.
+    // ---------------------------------------------------------
+
+    assign acceptF =
+        BPBranchF &&
+        !StallD &&
+        !FlushD &&
+        !mispredictE &&
+        (!StallF || !consumedF);
+
+    // ---------------------------------------------------------
+    // Next-state logic for predictor pipeline
+    // ---------------------------------------------------------
+
+    always_comb begin
+
+        // -----------------------------------------------------
+        // Default: preserve stage state.
+        //
+        // CORRECTION:
+        // Use validD_n = validD rather than validD = validD.
+        //
+        // This ensures validD is only written by always_ff
+        // and validD_n has a combinational default.
+        // -----------------------------------------------------
+
+        validD_n      = validD;
+        indexD_n      = indexD;
+        predictionD_n = predictionD;
+
+        validE_n      = validE;
+        indexE_n      = indexE;
+        predictionE_n = predictionE;
+
+        consumedF_n = consumedF;
+        consumedD_n = consumedD;
+        trainedE_n  = trainedE;
+
+        // -----------------------------------------------------
+        // Fetch consumption tracking
+        // -----------------------------------------------------
+
+        // When Fetch advances, the next Fetch instruction
+        // represents a new opportunity for acceptance.
+        if (!StallF)
+            consumedF_n = 1'b0;
+
+        if (acceptF && StallF)
+            consumedF_n = 1'b1;
+
+        // -----------------------------------------------------
+        // Execute register update
+        //
+        // FlushE inserts a bubble.
+        // StallE preserves the current Execute prediction.
+        // -----------------------------------------------------
+
+        if (FlushE) begin
+            validE_n      = 1'b0;
+            indexE_n      = '0;
+            predictionE_n = WEAKLY_NT;
+            trainedE_n    = 1'b0;
+        end
+        else if (!StallE) begin
+
+            // Transfer only an unconsumed Decode branch.
+            if (validD && BranchD && !consumedD) begin
+                validE_n      = 1'b1;
+                indexE_n      = indexD;
+                predictionE_n = predictionD;
+            end
+            else begin
+                validE_n      = 1'b0;
+                indexE_n      = '0;
+                predictionE_n = WEAKLY_NT;
+            end
+
+            trainedE_n = 1'b0;
+        end
+        else if (resolveE) begin
+
+            // A resolved branch held in Execute must not
+            // update again on subsequent stalled cycles.
+            trainedE_n = 1'b1;
+        end
+
+        // -----------------------------------------------------
+        // Decode consumption tracking
+        // -----------------------------------------------------
+
+        if (!StallD)
+            consumedD_n = 1'b0;
+
+        if (!StallE &&
+            !FlushE &&
+            validD &&
+            BranchD &&
+            !consumedD &&
+            StallD) begin
+            consumedD_n = 1'b1;
+        end
+
+        // -----------------------------------------------------
+        // Decode register update
+        // -----------------------------------------------------
+
+        if (FlushD) begin
+            validD_n      = 1'b0;
+            indexD_n      = '0;
+            predictionD_n = WEAKLY_NT;
+            consumedD_n   = 1'b0;
+        end
+        else if (!StallD) begin
+
+            if (acceptF) begin
+                validD_n      = 1'b1;
+                indexD_n      = indexF;
+                predictionD_n = BPDirF;
+            end
+            else begin
+                validD_n      = 1'b0;
+                indexD_n      = '0;
+                predictionD_n = WEAKLY_NT;
+            end
+        end
+
+        // -----------------------------------------------------
+        // Misprediction recovery
+        //
+        // Invalidate all younger speculative predictions.
+        // The currently resolving E branch is retained if
+        // Execute is stalled, but marked as trained.
+        // -----------------------------------------------------
+
+        if (mispredictE) begin
+
+            validD_n      = 1'b0;
+            indexD_n      = '0;
+            predictionD_n = WEAKLY_NT;
+            consumedD_n   = 1'b0;
+
+            consumedF_n = 1'b0;
+
+            if (!StallE) begin
+                validE_n      = 1'b0;
+                indexE_n      = '0;
+                predictionE_n = WEAKLY_NT;
+                trainedE_n    = 1'b0;
+            end
+            else begin
+                trainedE_n = 1'b1;
+            end
+        end
+
+    end
+
+    // ---------------------------------------------------------
+    // Committed global history update
+    //
+    // Only a branch that resolves for the first time is
+    // committed.
+    // ---------------------------------------------------------
+
+    always_comb begin
+        committed_history_n = committed_history;
+
+        if (resolveE) begin
+            committed_history_n = shift_history(
+                committed_history,
+                PCSrcE
+            );
+        end
+    end
+
+    // ---------------------------------------------------------
+    // Speculative global history reconstruction
+    //
+    // Reconstruct the speculative GHR after each edge from:
+    //
+    //   1. Updated committed global history
+    //   2. Surviving unresolved Execute prediction
+    //   3. Surviving unresolved Decode prediction
+    //
+    // E is older than D, so it is inserted first.
+    //
+    // This construction also handles:
+    //   - correct branch resolution
+    //   - incorrect branch resolution
+    //   - pipeline bubbles
+    //   - stalled stages
+    //   - flushed younger predictions
+    //
+    // A consumed D branch is represented in E and must not
+    // be counted again.
+    // ---------------------------------------------------------
+
+    always_comb begin
+
+        speculative_history_n = committed_history_n;
+
+        // Oldest outstanding speculative branch: Execute.
+        if (validE_n && !trainedE_n) begin
+            speculative_history_n = shift_history(
+                speculative_history_n,
+                predictionE_n[1]
+            );
+        end
+
+        // Younger outstanding speculative branch: Decode.
+        if (validD_n && !consumedD_n) begin
+            speculative_history_n = shift_history(
+                speculative_history_n,
+                predictionD_n[1]
+            );
+        end
+
+    end
+
+    // ---------------------------------------------------------
+    // Sequential predictor state
+    // ---------------------------------------------------------
+
+    integer i;
+
+    always_ff @(posedge clk) begin
+
+        if (reset) begin
+
+            // -------------------------------------------------
+            // Initialize every PHT counter to weakly not taken.
+            // -------------------------------------------------
+
+            for (i = 0; i < PHT_ENTRIES; i = i + 1) begin
+                pht[i] <= WEAKLY_NT;
+            end
+
+            // -------------------------------------------------
+            // Reset histories
+            // -------------------------------------------------
+
+            committed_history   <= '0;
+            speculative_history <= '0;
+
+            // -------------------------------------------------
+            // Reset Decode predictor state
+            // -------------------------------------------------
+
+            validD      <= 1'b0;
+            indexD      <= '0;
+            predictionD <= WEAKLY_NT;
+
+            // -------------------------------------------------
+            // Reset Execute predictor state
+            // -------------------------------------------------
+
+            validE      <= 1'b0;
+            indexE      <= '0;
+            predictionE <= WEAKLY_NT;
+
+            // -------------------------------------------------
+            // Reset duplicate-processing bookkeeping
+            // -------------------------------------------------
+
+            consumedF <= 1'b0;
+            consumedD <= 1'b0;
+            trainedE  <= 1'b0;
+
+        end
+        else begin
+
+            // -------------------------------------------------
+            // Train one PHT entry for each newly resolved
+            // conditional branch.
+            // -------------------------------------------------
+
+            if (update_valid) begin
+                pht[update_index] <= update_new;
+            end
+
+            // -------------------------------------------------
+            // Update histories
+            // -------------------------------------------------
+
+            committed_history   <= committed_history_n;
+            speculative_history <= speculative_history_n;
+
+            // -------------------------------------------------
+            // Update Decode predictor pipeline
+            // -------------------------------------------------
+
+            validD      <= validD_n;
+            indexD      <= indexD_n;
+            predictionD <= predictionD_n;
+
+            // -------------------------------------------------
+            // Update Execute predictor pipeline
+            // -------------------------------------------------
+
+            validE      <= validE_n;
+            indexE      <= indexE_n;
+            predictionE <= predictionE_n;
+
+            // -------------------------------------------------
+            // Update duplicate-processing state
+            // -------------------------------------------------
+
+            consumedF <= consumedF_n;
+            consumedD <= consumedD_n;
+            trainedE  <= trainedE_n;
+
+        end
+    end
+
+endmodule

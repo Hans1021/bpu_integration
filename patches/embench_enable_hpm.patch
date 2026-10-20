@@ -1,0 +1,23 @@
+diff --git a/config/riscv32/boards/rv32wallyverilog/boardsupport.c b/config/riscv32/boards/rv32wallyverilog/boardsupport.c
+index dce76ed..bd79b2b 100644
+--- a/config/riscv32/boards/rv32wallyverilog/boardsupport.c
++++ b/config/riscv32/boards/rv32wallyverilog/boardsupport.c
+@@ -18,4 +18,17 @@ extern void stop_trigger();
+ void
+ initialise_board ()
+ {
++  __asm__ volatile (
++    "csrwi 0x323, 1\n"  /* mhpmevent3  - branch count */
++    "csrwi 0x324, 1\n"  /* mhpmevent4  - jump not return */
++    "csrwi 0x325, 1\n"  /* mhpmevent5  - return */
++    "csrwi 0x326, 1\n"  /* mhpmevent6  - BP wrong */
++    "csrwi 0x327, 1\n"  /* mhpmevent7  - BP direction wrong */
++    "csrwi 0x328, 1\n"  /* mhpmevent8  - BP target wrong */
++    "csrwi 0x329, 1\n"  /* mhpmevent9  - RAS wrong */
++    "csrwi 0x32A, 1\n"  /* mhpmevent10 - instruction class wrong */
++    :
++    :
++    : "memory"
++  );
+ }
+\ No newline at end of file

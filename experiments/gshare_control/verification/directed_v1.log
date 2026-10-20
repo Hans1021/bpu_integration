@@ -1,0 +1,9 @@
+PASS: reset initializes PHT to weakly not taken
+PASS: not-taken counter update
+PASS: taken counter update and misprediction
+PASS: counter saturation
+ALL BASIC DIRECTED TESTS PASSED
+- /home/hansyang/projects/bpu_integration/experiments/gshare_control/verification/tb_gshare_llm.sv:257: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.036 2025-04-27
+- Verilator: $finish at 255ns; walltime 0.008 s; speed 55.253 us/s
+- Verilator: cpu 0.005 s on 1 threads; alloced 89 MB
