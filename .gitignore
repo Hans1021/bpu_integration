@@ -14,3 +14,6 @@
 /experiments/ogehl_cbp1/verification/reference_vectors_*.txt
 /experiments/ogehl_cbp1/verification/reference_DIST-*.txt
 /experiments/ogehl_cbp1/results/rtl_traces/*_vectors.txt
+
+# Local CBP-1 instrumentation binaries
+/experiments/ogehl_cbp1/verification/instrumented_reference/*.o

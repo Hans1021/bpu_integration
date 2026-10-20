@@ -99,3 +99,31 @@ workloads, not formal equivalence of all internal states.
 
 Internal-state checks, synthesis analysis, and Wally integration
 remain outstanding.
+
+## Adaptation Coverage
+
+Instrumented reference: separate copy of original CBP-1 predictor.
+
+All 20 distributed traces were evaluated.
+
+- Dynamic threshold increases: exercised in all 20 traces.
+- Dynamic threshold decreases: exercised in all 20 traces.
+- Short-to-long history switching: exercised in 14/20 traces.
+- Long-to-short history switching: exercised in 5/20 traces.
+- Multiple history-length transitions: observed.
+- Both short and long history configurations: exercised.
+- Instrumented reference preserved original prediction results
+  on the checked trace.
+
+The LLM-generated RTL v1 matched every conditional prediction
+from the original reference across all 20 traces.
+
+This establishes strong observed behavioral equivalence,
+not formal equivalence of internal predictor state.
+
+## Current Status
+
+Standalone CBP-1 O-GEHL reproduction and verification complete.
+
+Next: integration into CORE-V-Wally, architectural regression
+testing, and Embench performance evaluation.

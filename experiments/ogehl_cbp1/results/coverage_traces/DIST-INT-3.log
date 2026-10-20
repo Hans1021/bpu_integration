@@ -1,0 +1,20 @@
+
+=== O-GEHL Adaptation Coverage ===
+Branch events:        4136429
+Threshold increases:  129
+Threshold decreases:  129
+Short switches:       0
+Long switches:        0
+Long-history events:  0
+TC range:             [-64, 63]
+AC range:             [-256, 0]
+Threshold range:      [5, 9]
+Final threshold:      8
+Final AC:             -255
+Final history lengths: T2=5 T4=12 T6=31
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *   265444 / 29499978 =   8.998
+total branches:                   4136429
+total cc branches:                3771697
+total predicts:                   3771697
+*********************************************************
