@@ -1,0 +1,10 @@
+======================================
+O-GEHL differential test PASSED
+Events:               100000
+Conditional branches: 83898
+Prediction mismatches: 0
+======================================
+- experiments/ogehl_cbp1/verification/tb_ogehl_ref.sv:142: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.036 2025-04-27
+- Verilator: $finish at 468us; walltime 1.782 s; speed 258.503 us/s
+- Verilator: cpu 1.810 s on 1 threads; alloced 89 MB

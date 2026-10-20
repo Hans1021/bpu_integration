@@ -1,0 +1,19 @@
+make: Entering directory '/home/hansyang/projects/bpu_integration/experiments/ogehl_cbp1/reference/extracted/Andre'
+g++ -g -Wall   -c -o cbp_inst.o cbp_inst.cc
+cbp_inst.cc: In function ‘bool cbp::cbp_inst_print_statistics(FILE*, const CBP_INST_STREAM*)’:
+cbp_inst.cc:1343:24: warning: format not a string literal and no format arguments [-Wformat-security]
+ 1343 |         return (fprintf(stream, cbp_inst_stream->get_statistics_string().c_str()) >= 0);
+      |                 ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+g++ -g -Wall   -c -o main.o main.cc
+g++ -g -Wall   -c -o op_state.o op_state.cc
+g++ -g -Wall   -c -o predictor.o predictor.cc
+g++ -g -Wall   -c -o tread.o tread.cc
+tread.cc: In constructor ‘cbp_trace_reader_c::cbp_trace_reader_c(char*)’:
+tread.cc:40:38: warning: ‘%s’ directive writing up to 255 bytes into a region of size 246 [-Wformat-overflow=]
+   40 |     sprintf(trnm_cmdline, "bzip2 -dc %s.bz2", trace_name_copy);
+      |                                      ^~       ~~~~~~~~~~~~~~~
+tread.cc:40:12: note: ‘sprintf’ output between 15 and 270 bytes into a destination of size 256
+   40 |     sprintf(trnm_cmdline, "bzip2 -dc %s.bz2", trace_name_copy);
+      |     ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+g++ -o predictor cbp_inst.o main.o op_state.o predictor.o tread.o
+make: Leaving directory '/home/hansyang/projects/bpu_integration/experiments/ogehl_cbp1/reference/extracted/Andre'

@@ -1,0 +1,85 @@
+You are an expert digital hardware engineer specializing in synthesizable SystemVerilog, processor microarchitecture, and branch prediction.
+
+Your task is to implement the original CBP-1 O-GEHL branch predictor in synthesizable SystemVerilog.
+
+I have attached two documents:
+
+1. `spec.md` — the complete behavioral specification of the original O-GEHL algorithm.
+2. `rtl_interface.md` — the required standalone hardware interface and timing behavior.
+
+Read both documents completely before generating the implementation.
+
+## Objective
+
+Produce a reference-equivalent, standalone SystemVerilog implementation of O-GEHL.
+
+The implementation must reproduce the specified CBP-1 algorithm, including its prediction tables, exact indexing, history management, dynamic training threshold, and dynamic history-length adaptation.
+
+This is not yet a Wally-integrated predictor. Do not introduce speculative pipeline behavior or change the algorithm to resemble a conventional GShare or TAGE predictor.
+
+## Required module
+
+Implement exactly this top-level module:
+
+```systemverilog
+module ogehl_ref (
+    input  logic        clk,
+    input  logic        reset,
+    input  logic        event_valid,
+    input  logic [31:0] event_pc,
+    input  logic        event_is_conditional,
+    input  logic        event_taken,
+    output logic        prediction_valid,
+    output logic        prediction_taken
+);
+```
+
+Follow the attached interface specification for all signal semantics.
+
+## Implementation requirements
+
+1. Use synthesizable SystemVerilog only, compatible with Verilator 5.036.
+2. Implement the fixed original CBP-1 O-GEHL configuration, not a simplified approximation.
+3. Implement all eight signed-counter tables using their specified logical sizes and widths.
+4. Implement the exact `INDEX` algorithm, including both bit-selection cases and XOR folding.
+5. Preserve the specified prediction-sum bias and signed arithmetic.
+6. Implement counter saturation and the exact training condition.
+7. Implement dynamic threshold fitting, including update ordering and boundary conditions.
+8. Implement dynamic history-length fitting, including the T7 alias tags and AC counter.
+9. Implement the original global-history and path-history update rules.
+10. Preserve the specified initialization behavior.
+11. Ensure combinational prediction depends only on the current pre-update predictor state and branch information, never on `event_taken`.
+12. Support one valid branch event per clock cycle, including consecutive events.
+13. Handle nonconditional branch events correctly.
+14. Do not use delays, dynamic allocation, DPI, file I/O, or testbench-only constructs in the DUT.
+15. Avoid inferred latches, out-of-range selections, incorrect signed/unsigned conversions, truncated arithmetic, and multiple procedural drivers.
+16. Keep all required helper functions and submodules in a single source file.
+17. Do not depend on Wally-specific modules or packages.
+
+Favor behavioral correctness and clear implementation over area optimization for this first version. Large arrays, reset loops, and combinational indexing are acceptable provided the design remains synthesizable.
+
+Pay particular attention to history lengths exceeding 64 bits, exact indexing bit order, signed counter limits, threshold-update ordering, and the distinction between prediction and state update.
+
+## Handling ambiguities
+
+Treat `spec.md` as authoritative for O-GEHL behavior and `rtl_interface.md` as authoritative for the hardware interface.
+
+Do not silently simplify or replace any algorithmic requirement.
+
+If you encounter an ambiguity, implement the interpretation most consistent with the attached specifications and explicitly document your assumption.
+
+If the two documents conflict, identify the conflict and the interpretation selected.
+
+## Output format
+
+First, briefly summarize your intended RTL architecture and any important assumptions.
+
+Then provide the **complete SystemVerilog implementation** in one code block, suitable for saving directly as `ogehl_ref.sv`.
+
+Do not omit any functions, declarations, or implementation sections.
+
+After the code, briefly identify any limitations or aspects that require particular verification attention.
+
+Do not claim that the design has passed compilation, synthesis, or verification unless you have actually performed those checks.
+
+The next stage of this experiment will compile your generated code and compare its behavior against the original CBP-1 software implementation. Any discrepancies will be supplied for subsequent repair iterations.

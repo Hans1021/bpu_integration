@@ -1,0 +1,45 @@
+Running original O-GEHL on CBP-1 distributed traces
+
+[1/20] DIST-FP-1
+1000*wrong_cc_predicts/total insts: 1000 *    41527 / 29499988 =   1.408
+[2/20] DIST-FP-2
+1000*wrong_cc_predicts/total insts: 1000 *    26735 / 29499869 =   0.906
+[3/20] DIST-FP-3
+1000*wrong_cc_predicts/total insts: 1000 *    12174 / 29499978 =   0.413
+[4/20] DIST-FP-4
+1000*wrong_cc_predicts/total insts: 1000 *     5337 / 29499976 =   0.181
+[5/20] DIST-FP-5
+1000*wrong_cc_predicts/total insts: 1000 *     1206 / 29499969 =   0.041
+[6/20] DIST-INT-1
+1000*wrong_cc_predicts/total insts: 1000 *    20471 / 29499987 =   0.694
+[7/20] DIST-INT-2
+1000*wrong_cc_predicts/total insts: 1000 *   162810 / 29499985 =   5.519
+[8/20] DIST-INT-3
+1000*wrong_cc_predicts/total insts: 1000 *   265444 / 29499978 =   8.998
+[9/20] DIST-INT-4
+1000*wrong_cc_predicts/total insts: 1000 *    27736 / 29499960 =   0.940
+[10/20] DIST-INT-5
+1000*wrong_cc_predicts/total insts: 1000 *    10120 / 29499990 =   0.343
+[11/20] DIST-MM-1
+1000*wrong_cc_predicts/total insts: 1000 *   212919 / 29499979 =   7.218
+[12/20] DIST-MM-2
+1000*wrong_cc_predicts/total insts: 1000 *   266053 / 29499970 =   9.019
+[13/20] DIST-MM-3
+1000*wrong_cc_predicts/total insts: 1000 *     6741 / 29499970 =   0.229
+[14/20] DIST-MM-4
+1000*wrong_cc_predicts/total insts: 1000 *    40071 / 29499993 =   1.358
+[15/20] DIST-MM-5
+1000*wrong_cc_predicts/total insts: 1000 *   130593 / 29499791 =   4.427
+[16/20] DIST-SERV-1
+1000*wrong_cc_predicts/total insts: 1000 *    58969 / 29499316 =   1.999
+[17/20] DIST-SERV-2
+1000*wrong_cc_predicts/total insts: 1000 *    56408 / 29499198 =   1.912
+[18/20] DIST-SERV-3
+1000*wrong_cc_predicts/total insts: 1000 *   130441 / 29499817 =   4.422
+[19/20] DIST-SERV-4
+1000*wrong_cc_predicts/total insts: 1000 *   100502 / 29498081 =   3.407
+[20/20] DIST-SERV-5
+1000*wrong_cc_predicts/total insts: 1000 *    87206 / 29497759 =   2.956
+
+Completed 20 traces.
+Logs: /home/hansyang/projects/bpu_integration/experiments/ogehl_cbp1/results/reference_traces

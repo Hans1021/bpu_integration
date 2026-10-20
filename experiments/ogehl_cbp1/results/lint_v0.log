@@ -1,0 +1,40 @@
+%Warning-DECLFILENAME: experiments/ogehl_cbp1/rtl/ogehl_ref_v0.sv:4:8: Filename 'ogehl_ref_v0' does not match MODULE name: 'ogehl_ref'
+    4 | module ogehl_ref (
+      |        ^~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.036
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: experiments/ogehl_cbp1/rtl/ogehl_ref_v0.sv:160:45: Operator ADD expects 16 bits on the RHS, but RHS's SIGNED generates 5 bits.
+                                                                       : ... note: In instance 'ogehl_ref'
+  160 |             prediction_sum = prediction_sum + $signed(T0[indices[0]]);
+      |                                             ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.036
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: experiments/ogehl_cbp1/rtl/ogehl_ref_v0.sv:161:45: Operator ADD expects 16 bits on the RHS, but RHS's SIGNED generates 5 bits.
+                                                                       : ... note: In instance 'ogehl_ref'
+  161 |             prediction_sum = prediction_sum + $signed(T1[indices[1][9:0]]);
+      |                                             ^
+%Warning-WIDTHEXPAND: experiments/ogehl_cbp1/rtl/ogehl_ref_v0.sv:162:45: Operator ADD expects 16 bits on the RHS, but RHS's SIGNED generates 4 bits.
+                                                                       : ... note: In instance 'ogehl_ref'
+  162 |             prediction_sum = prediction_sum + $signed(T2[indices[2]]);
+      |                                             ^
+%Warning-WIDTHEXPAND: experiments/ogehl_cbp1/rtl/ogehl_ref_v0.sv:163:45: Operator ADD expects 16 bits on the RHS, but RHS's SIGNED generates 4 bits.
+                                                                       : ... note: In instance 'ogehl_ref'
+  163 |             prediction_sum = prediction_sum + $signed(T3[indices[3]]);
+      |                                             ^
+%Warning-WIDTHEXPAND: experiments/ogehl_cbp1/rtl/ogehl_ref_v0.sv:164:45: Operator ADD expects 16 bits on the RHS, but RHS's SIGNED generates 4 bits.
+                                                                       : ... note: In instance 'ogehl_ref'
+  164 |             prediction_sum = prediction_sum + $signed(T4[indices[4]]);
+      |                                             ^
+%Warning-WIDTHEXPAND: experiments/ogehl_cbp1/rtl/ogehl_ref_v0.sv:165:45: Operator ADD expects 16 bits on the RHS, but RHS's SIGNED generates 4 bits.
+                                                                       : ... note: In instance 'ogehl_ref'
+  165 |             prediction_sum = prediction_sum + $signed(T5[indices[5]]);
+      |                                             ^
+%Warning-WIDTHEXPAND: experiments/ogehl_cbp1/rtl/ogehl_ref_v0.sv:166:45: Operator ADD expects 16 bits on the RHS, but RHS's SIGNED generates 4 bits.
+                                                                       : ... note: In instance 'ogehl_ref'
+  166 |             prediction_sum = prediction_sum + $signed(T6[indices[6]]);
+      |                                             ^
+%Warning-WIDTHEXPAND: experiments/ogehl_cbp1/rtl/ogehl_ref_v0.sv:167:45: Operator ADD expects 16 bits on the RHS, but RHS's SIGNED generates 4 bits.
+                                                                       : ... note: In instance 'ogehl_ref'
+  167 |             prediction_sum = prediction_sum + $signed(T7[indices[7]]);
+      |                                             ^
+%Error: Exiting due to 9 warning(s)

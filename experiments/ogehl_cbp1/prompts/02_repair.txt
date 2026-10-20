@@ -1,0 +1,75 @@
+The initial O-GEHL RTL generation has been saved as v0. I ran Verilator 5.036 lint and reviewed its behavior against the original CBP-1 reference implementation.
+
+Please produce a corrected v1 of the complete `ogehl_ref` module.
+
+There are two issues to address.
+
+## Issue 1 — Verilator width warnings
+
+Verilator reports eight `WIDTHEXPAND` warnings for the prediction sum.
+
+The relevant operations are:
+
+```systemverilog
+prediction_sum = prediction_sum + $signed(T0[indices[0]]);
+prediction_sum = prediction_sum + $signed(T1[indices[1][9:0]]);
+```
+
+and the corresponding additions for T2 through T7.
+
+The prediction sum is 16 bits, while the counters are signed 4-bit or 5-bit values.
+
+Explicitly sign-extend each counter to the sum width before addition. Preserve the correct signed arithmetic and the mandatory +4 bias.
+
+The lint run also reported `DECLFILENAME` because the saved versioned filename was `ogehl_ref_v0.sv`, while the module name is `ogehl_ref`. Do not rename the module. We will handle the filename externally.
+
+## Issue 2 — Dynamic threshold off-by-one
+
+The original C++ reference uses the following semantics:
+
+On a misprediction:
+
+```cpp
+TC += 1;
+if (TC > 63) {
+    TC = 63;
+    if (thresupdate < 31) {
+        TC = 0;
+        thresupdate++;
+    }
+}
+```
+
+On a correct low-confidence prediction:
+
+```cpp
+TC--;
+if (TC < -64) {
+    TC = -64;
+    if (thresupdate > 0) {
+        thresupdate--;
+        TC = 0;
+    }
+}
+```
+
+Your original RTL instead triggers threshold adjustment at `TC >= 63` and `TC <= -64`.
+
+This adjusts the threshold one qualifying event too early.
+
+Correct the implementation so that threshold adjustment occurs only after the incremented/decremented value **strictly exceeds the original limits**, matching the C++ reference exactly.
+
+Preserve the original ordering in which threshold adaptation occurs before the counter-training eligibility decision.
+
+## Requirements
+
+1. Correct both issues.
+2. Preserve the original CBP-1 algorithm and module interface.
+3. Do not introduce speculative history or Wally-specific behavior.
+4. Do not simplify the indexing or adaptation algorithms.
+5. Review all changes for signedness and boundary correctness.
+6. Avoid unrelated architectural changes.
+
+Return the **complete corrected SystemVerilog source** in one code block, not a patch or isolated snippets.
+
+Briefly summarize what changed. Do not claim successful lint or verification unless you actually performed it.

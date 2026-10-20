@@ -1,0 +1,268 @@
+=== DIST-FP-1 ===
+Generated 2616522 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *    41527 / 29499988 =   1.408
+total branches:                   2616522
+total cc branches:                2213673
+total predicts:                   2213673
+*********************************************************
+O-GEHL differential test PASSED
+Events:               2616522
+Conditional branches: 2213673
+Prediction mismatches: 0
+======================================
+
+=== DIST-FP-2 ===
+Generated 1805454 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *    26735 / 29499869 =   0.906
+total branches:                   1805454
+total cc branches:                1792835
+total predicts:                   1792835
+*********************************************************
+O-GEHL differential test PASSED
+Events:               1805454
+Conditional branches: 1792835
+Prediction mismatches: 0
+======================================
+
+=== DIST-FP-3 ===
+Generated 1573540 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *    12174 / 29499978 =   0.413
+total branches:                   1573540
+total cc branches:                1546797
+total predicts:                   1546797
+*********************************************************
+O-GEHL differential test PASSED
+Events:               1573540
+Conditional branches: 1546797
+Prediction mismatches: 0
+======================================
+
+=== DIST-FP-4 ===
+Generated 921402 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *     5337 / 29499976 =   0.181
+total branches:                    921402
+total cc branches:                 895842
+total predicts:                    895842
+*********************************************************
+O-GEHL differential test PASSED
+Events:               921402
+Conditional branches: 895842
+Prediction mismatches: 0
+======================================
+
+=== DIST-FP-5 ===
+Generated 2722674 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *     1206 / 29499969 =   0.041
+total branches:                   2722674
+total cc branches:                2422049
+total predicts:                   2422049
+*********************************************************
+O-GEHL differential test PASSED
+Events:               2722674
+Conditional branches: 2422049
+Prediction mismatches: 0
+======================================
+
+Skipping DIST-INT-1 (already verified)
+=== DIST-INT-2 ===
+Generated 3671448 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *   162810 / 29499985 =   5.519
+total branches:                   3671448
+total cc branches:                2866495
+total predicts:                   2866495
+*********************************************************
+O-GEHL differential test PASSED
+Events:               3671448
+Conditional branches: 2866495
+Prediction mismatches: 0
+======================================
+
+=== DIST-INT-3 ===
+Generated 4136429 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *   265444 / 29499978 =   8.998
+total branches:                   4136429
+total cc branches:                3771697
+total predicts:                   3771697
+*********************************************************
+O-GEHL differential test PASSED
+Events:               4136429
+Conditional branches: 3771697
+Prediction mismatches: 0
+======================================
+
+=== DIST-INT-4 ===
+Generated 2432848 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *    27736 / 29499960 =   0.940
+total branches:                   2432848
+total cc branches:                2069894
+total predicts:                   2069894
+*********************************************************
+O-GEHL differential test PASSED
+Events:               2432848
+Conditional branches: 2069894
+Prediction mismatches: 0
+======================================
+
+=== DIST-INT-5 ===
+Generated 3818636 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *    10120 / 29499990 =   0.343
+total branches:                   3818636
+total cc branches:                3755315
+total predicts:                   3755315
+*********************************************************
+O-GEHL differential test PASSED
+Events:               3818636
+Conditional branches: 3755315
+Prediction mismatches: 0
+======================================
+
+=== DIST-MM-1 ===
+Generated 2784449 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *   212919 / 29499979 =   7.218
+total branches:                   2784449
+total cc branches:                2229289
+total predicts:                   2229289
+*********************************************************
+O-GEHL differential test PASSED
+Events:               2784449
+Conditional branches: 2229289
+Prediction mismatches: 0
+======================================
+
+=== DIST-MM-2 ===
+Generated 4213315 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *   266053 / 29499970 =   9.019
+total branches:                   4213315
+total cc branches:                3809780
+total predicts:                   3809780
+*********************************************************
+O-GEHL differential test PASSED
+Events:               4213315
+Conditional branches: 3809780
+Prediction mismatches: 0
+======================================
+
+=== DIST-MM-3 ===
+Generated 4953146 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *     6741 / 29499970 =   0.229
+total branches:                   4953146
+total cc branches:                3014850
+total predicts:                   3014850
+*********************************************************
+O-GEHL differential test PASSED
+Events:               4953146
+Conditional branches: 3014850
+Prediction mismatches: 0
+======================================
+
+=== DIST-MM-4 ===
+Generated 5084440 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *    40071 / 29499993 =   1.358
+total branches:                   5084440
+total cc branches:                4874888
+total predicts:                   4874888
+*********************************************************
+O-GEHL differential test PASSED
+Events:               5084440
+Conditional branches: 4874888
+Prediction mismatches: 0
+======================================
+
+=== DIST-MM-5 ===
+Generated 3406316 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *   130593 / 29499791 =   4.427
+total branches:                   3406316
+total cc branches:                2563897
+total predicts:                   2563897
+*********************************************************
+O-GEHL differential test PASSED
+Events:               3406316
+Conditional branches: 2563897
+Prediction mismatches: 0
+======================================
+
+=== DIST-SERV-1 ===
+Generated 5607148 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *    58969 / 29499316 =   1.999
+total branches:                   5607148
+total cc branches:                3660616
+total predicts:                   3660616
+*********************************************************
+O-GEHL differential test PASSED
+Events:               5607148
+Conditional branches: 3660616
+Prediction mismatches: 0
+======================================
+
+=== DIST-SERV-2 ===
+Generated 5443962 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *    56408 / 29499198 =   1.912
+total branches:                   5443962
+total cc branches:                3537562
+total predicts:                   3537562
+*********************************************************
+O-GEHL differential test PASSED
+Events:               5443962
+Conditional branches: 3537562
+Prediction mismatches: 0
+======================================
+
+=== DIST-SERV-3 ===
+Generated 5358488 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *   130441 / 29499817 =   4.422
+total branches:                   5358488
+total cc branches:                3811906
+total predicts:                   3811906
+*********************************************************
+O-GEHL differential test PASSED
+Events:               5358488
+Conditional branches: 3811906
+Prediction mismatches: 0
+======================================
+
+=== DIST-SERV-4 ===
+Generated 6299843 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *   100502 / 29498081 =   3.407
+total branches:                   6299843
+total cc branches:                4266796
+total predicts:                   4266796
+*********************************************************
+O-GEHL differential test PASSED
+Events:               6299843
+Conditional branches: 4266796
+Prediction mismatches: 0
+======================================
+
+=== DIST-SERV-5 ===
+Generated 6411192 branch events
+*********************************************************
+1000*wrong_cc_predicts/total insts: 1000 *    87206 / 29497759 =   2.956
+total branches:                   6411192
+total cc branches:                4291964
+total predicts:                   4291964
+*********************************************************
+O-GEHL differential test PASSED
+Events:               6411192
+Conditional branches: 4291964
+Prediction mismatches: 0
+======================================
+
+All remaining CBP-1 traces PASSED.

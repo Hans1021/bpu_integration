@@ -1,0 +1,16 @@
+# CBP framework and benchmark traces
+# Downloaded separately; do not commit large datasets.
+/resources/cbp1/cbp-framework-version-3.tar.bz2
+/resources/cbp1/cbp-framework-version-3/
+
+# Extracted reference archives (original .uue files are preserved)
+/experiments/*/reference/extracted/*.tar.bz2
+
+# Compiled C/C++ reference artifacts
+*.o
+/experiments/*/reference/extracted/**/predictor
+
+# Generated O-GEHL reference vectors
+/experiments/ogehl_cbp1/verification/reference_vectors_*.txt
+/experiments/ogehl_cbp1/verification/reference_DIST-*.txt
+/experiments/ogehl_cbp1/results/rtl_traces/*_vectors.txt
