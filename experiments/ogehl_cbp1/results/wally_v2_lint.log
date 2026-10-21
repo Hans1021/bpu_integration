@@ -1,0 +1,26 @@
+%Warning-DECLFILENAME: experiments/ogehl_cbp1/rtl/ogehl_wally_v2.sv:8:8: Filename 'ogehl_wally_v2' does not match MODULE name: 'ogehl_wally'
+    8 | module ogehl_wally #(
+      |        ^~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.036
+                       ... Use "/* verilator lint_off DECLFILENAME */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: experiments/ogehl_cbp1/rtl/ogehl_wally_v2.sv:21:30: Bits of signal are not used: 'PCD'[31:1]
+                                                                         : ... note: In instance 'ogehl_wally'
+   21 |     input  logic [XLEN-1:0]  PCD,
+      |                              ^~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.036
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: experiments/ogehl_cbp1/rtl/ogehl_wally_v2.sv:22:30: Bits of signal are not used: 'PCE'[31:1]
+                                                                         : ... note: In instance 'ogehl_wally'
+   22 |     input  logic [XLEN-1:0]  PCE,
+      |                              ^~~
+%Warning-UNUSEDSIGNAL: experiments/ogehl_cbp1/rtl/ogehl_wally_v2.sv:199:29: Bits of signal are not used: 'history'[199]
+                                                                          : ... note: In instance 'ogehl_wally'
+  199 |         input logic [199:0] history,
+      |                             ^~~~~~~
+%Warning-UNUSEDSIGNAL: experiments/ogehl_cbp1/rtl/ogehl_wally_v2.sv:206:28: Bits of signal are not used: 'history'[15]
+                                                                          : ... note: In instance 'ogehl_wally'
+  206 |         input logic [15:0] history,
+      |                            ^~~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.036 2025-04-27 rev v5.036
+- Verilator: Built from 0.046 MB sources in 2 modules, into 0.497 MB in 5 C++ files needing 0.000 MB
+- Verilator: Walltime 0.066 s (elab=0.008, cvt=0.036, bld=0.000); cpu 0.047 s on 1 threads; alloced 25.152 MB

@@ -1,0 +1,42 @@
+rv32i_m/C/src/cadd-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/caddi-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/caddi16sp-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/caddi4spn-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cand-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/candi-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cbeqz-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cbnez-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cj-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cjal-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cjalr-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cjr-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cli-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/clui-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/clw-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/clwsp-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cmv-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cnop-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cor-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cslli-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/csrai-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/csrli-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/csub-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/csw-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cswsp-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cxor-01.S succeeded.  Brilliant!!!
+rv32i_m/C/src/cebreak-01.S succeeded.  Brilliant!!!
+rv32i_m/F_Zcf/src/c.flw-01.S succeeded.  Brilliant!!!
+rv32i_m/F_Zcf/src/c.flwsp-01.S succeeded.  Brilliant!!!
+rv32i_m/F_Zcf/src/c.fsw-01.S succeeded.  Brilliant!!!
+rv32i_m/F_Zcf/src/c.fswsp-01.S succeeded.  Brilliant!!!
+rv32i_m/D_Zcd/src/c.fld-01.S succeeded.  Brilliant!!!
+rv32i_m/D_Zcd/src/c.fldsp-01.S succeeded.  Brilliant!!!
+rv32i_m/D_Zcd/src/c.fsd-01.S succeeded.  Brilliant!!!
+rv32i_m/D_Zcd/src/c.fsdsp-01.S succeeded.  Brilliant!!!
+SUCCESS! All tests ran without failures.
+- /home/hansyang/projects/bpu_integration/cvw/testbench/testbench.sv:510: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.036 2025-04-27
+- Verilator: $finish at 791ns; walltime 1.954 s; speed 410.675 ns/s
+- Verilator: cpu 1.926 s on 1 threads; alloced 326 MB
+Config=bpred_OGEHL_LLM_rv32gc tests=arch32c sim=verilator gui=False args='' params='' define=''
+Running Verilator on bpred_OGEHL_LLM_rv32gc arch32c

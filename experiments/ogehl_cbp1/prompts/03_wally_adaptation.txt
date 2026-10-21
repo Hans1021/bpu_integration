@@ -1,0 +1,15 @@
+Now adapt the verified O-GEHL v1 implementation for integration into CORE-V-Wally.
+
+I've attached `gshare_llm.sv` as an example of Wally pipeline management and `bpred.sv` as the integration interface.
+
+Generate a separate module named `ogehl_wally` rather than modifying the verified standalone implementation.
+
+Preserve the original O-GEHL prediction algorithm, table configuration, indexing, training rules, dynamic threshold fitting, and history-length adaptation.
+
+Implement Fetch-stage prediction, branch-resolution updates, speculative global and path histories, correct misprediction recovery, and stall/flush handling. Include unconditional control-flow instructions in history as required by the original O-GEHL algorithm.
+
+Use GShare only as a reference for Wally's pipeline conventions, not its prediction algorithm.
+
+Do not silently simplify the predictor. If the available Wally signals are insufficient for correct behavior, explicitly identify what's missing.
+
+Provide the complete synthesizable SystemVerilog implementation and explain any unavoidable differences from the standalone version. Do not claim verification without testing.

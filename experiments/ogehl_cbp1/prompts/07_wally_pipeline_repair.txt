@@ -1,0 +1,33 @@
+Revise `ogehl_wally_v1.sv` to correct its pipeline register semantics and address any demonstrated speculative-history recovery issues.
+
+We inspected the exact Wally implementation.
+
+**Important discovery:** Wally's `flopenrc` implements:
+
+```systemverilog
+always_ff @(posedge clk)
+  if (reset) q <= '0;
+  else if (en)
+    if (clear) q <= '0;
+    else q <= d;
+```
+
+Its Decode and Execute pipeline registers use `en = ~StallD/E` and `clear = FlushD/E`.
+
+Therefore, unlike your v1, a flush must not clear a register while its enable is low. Correct both metadata pipeline stages to match these exact semantics.
+
+Also verify the following:
+
+1. Predictor metadata and instruction validity must remain aligned under simultaneous stalls and flushes.
+2. An Execute control-flow instruction must train and update history exactly once, including when a redirect overlaps with a stall.
+3. Older Memory-stage redirects must not cause squashed Execute instructions to train.
+4. Speculative history must not cause a surviving Fetch prediction to incorporate an instruction that was squashed.
+5. Preserve Fetch-time prediction sums, original eight indices, and all O-GEHL arithmetic and adaptation behavior.
+6. Preserve the established `PCF` indexing and Wally BTB timing alignment.
+7. Do not introduce unsupported Fetch-valid signals or unnecessary ports.
+
+Only make changes justified by the inspected Wally behavior. Explain any remaining ambiguity rather than silently assuming correctness.
+
+Produce the complete revised synthesizable SystemVerilog source as module `ogehl_wally`, followed by a concise change summary and remaining verification requirements.
+
+Do not claim verification without testing.

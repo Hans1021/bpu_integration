@@ -1,0 +1,588 @@
+
+module ogehl_wally #(
+    parameter int XLEN = 32
+) (
+    input  logic            clk,
+    input  logic            reset,
+    input  logic            StallD,
+    input  logic            StallE,
+    input  logic            FlushD,
+    input  logic            FlushE,
+    input  logic            FlushM,
+    input  logic            InstrValidD,
+    input  logic            InstrValidE,
+    input  logic [XLEN-1:0] PCF,
+    input  logic [XLEN-1:0] PCD,
+    input  logic [XLEN-1:0] PCE,
+    input  logic            BPBranchF,
+    input  logic            BPJumpF,
+    input  logic            BranchD,
+    input  logic            JumpD,
+    input  logic            CallD,
+    input  logic            ReturnD,
+    input  logic            BranchE,
+    input  logic            JumpE,
+    input  logic            CallE,
+    input  logic            ReturnE,
+    input  logic            PCSrcE,
+    output logic [1:0]      BPDirF,
+    output logic            BPDirWrongE
+);
+
+    // Original CBP-1 logical table organization.
+    logic signed [4:0] T0 [0:2047];
+    logic signed [4:0] T1 [0:1023];
+    logic signed [3:0] T2 [0:2047];
+    logic signed [3:0] T3 [0:2047];
+    logic signed [3:0] T4 [0:2047];
+    logic signed [3:0] T5 [0:2047];
+    logic signed [3:0] T6 [0:2047];
+    logic signed [3:0] T7 [0:2047];
+    logic              MINITAG [0:1023];
+
+    logic [199:0] committed_global_history;
+    logic [15:0]  committed_path_history;
+
+    logic signed [7:0] TC;
+    logic signed [8:0] AC;
+    logic [4:0] thresupdate;
+    logic [7:0] UsedHistLength [0:7];
+
+    // Original standalone v1 INDEX function.
+    function automatic logic [10:0] ogehl_index (
+        input logic [31:0] pc,
+        input logic [199:0] gh,
+        input logic [15:0] ph,
+        input integer table_number,
+        input integer m
+    );
+        integer w, n, p, min_add, funct;
+        integer j, source_pos, rotation, chunk_number;
+        logic selected_bit;
+        logic [32:0] inter, remaining;
+        logic [10:0] chunk, rotated, result;
+
+        begin
+            w = (table_number == 1) ? 10 : 11;
+            n = 3 * w;
+            p = (m < 16) ? m : 16;
+            min_add = n - m - p;
+            if (min_add > 20)
+                min_add = 20;
+
+            funct = (table_number & 3) + 1;
+            inter = '0;
+            source_pos = 0;
+            selected_bit = 1'b0;
+
+            if (min_add >= 8) begin
+                for (j = 0; j < 33; j = j + 1) begin
+                    if (j < n) begin
+                        if (j < p)
+                            inter[j] = ph[j];
+                        else if (j < p + min_add)
+                            inter[j] = pc[j - p];
+                        else if (j < p + min_add + m)
+                            inter[j] = gh[j - p - min_add];
+                    end
+                end
+            end else begin
+                for (j = 0; j < 33; j = j + 1) begin
+                    if (j < n) begin
+                        source_pos =
+                            (j * (8 + m + p - 1)) / (n - 1);
+
+                        selected_bit = 1'b0;
+
+                        if (source_pos < m)
+                            selected_bit = gh[source_pos];
+                        else if (source_pos < m + 8)
+                            selected_bit = pc[source_pos - m];
+                        else
+                            selected_bit = ph[source_pos - m - 8];
+
+                        inter = {inter[31:0], selected_bit};
+                    end
+                end
+            end
+
+            remaining = inter;
+            result = remaining[10:0];
+            if (w == 10)
+                result[10] = 1'b0;
+
+            rotation = funct;
+
+            for (chunk_number = 0;
+                 chunk_number < 2;
+                 chunk_number = chunk_number + 1) begin
+
+                remaining = remaining >> w;
+                chunk = remaining[10:0];
+
+                if (w == 10)
+                    chunk[10] = 1'b0;
+
+                rotated =
+                    (chunk >> rotation) |
+                    (chunk << (w - rotation));
+
+                if (w == 10)
+                    rotated[10] = 1'b0;
+
+                result = result ^ rotated;
+                rotation = (rotation + 1) % w;
+            end
+
+            ogehl_index = result;
+        end
+    endfunction
+
+    function automatic logic signed [15:0] extend5 (
+        input logic signed [4:0] counter_value
+    );
+        extend5 = {{11{counter_value[4]}}, counter_value};
+    endfunction
+
+    function automatic logic signed [15:0] extend4 (
+        input logic signed [3:0] counter_value
+    );
+        extend4 = {{12{counter_value[3]}}, counter_value};
+    endfunction
+
+    function automatic logic signed [4:0] sat5 (
+        input logic signed [4:0] value,
+        input logic actual_taken
+    );
+        if (actual_taken)
+            sat5 = (value == 5'sd15) ?
+                   value : value + 5'sd1;
+        else
+            sat5 = (value == 5'sb10000) ?
+                   value : value - 5'sd1;
+    endfunction
+
+    function automatic logic signed [3:0] sat4 (
+        input logic signed [3:0] value,
+        input logic actual_taken
+    );
+        if (actual_taken)
+            sat4 = (value == 4'sd7) ?
+                   value : value + 4'sd1;
+        else
+            sat4 = (value == 4'sb1000) ?
+                   value : value - 4'sd1;
+    endfunction
+
+    // Oldest bits are deliberately discarded.
+    function automatic logic [199:0] advance_global (
+        input logic [199:0] history,
+        input logic outcome
+    );
+        advance_global = {history[198:0], outcome};
+    endfunction
+
+    function automatic logic [15:0] advance_path (
+        input logic [15:0] history,
+        input logic pc_bit0
+    );
+        advance_path = {history[14:0], pc_bit0};
+    endfunction
+
+    // Fetch prediction metadata.
+    logic [10:0] indicesF [0:7];
+    logic [10:0] indicesD [0:7];
+    logic [10:0] indicesE [0:7];
+
+    logic signed [15:0] prediction_sumF;
+    logic signed [15:0] prediction_sumD;
+    logic signed [15:0] prediction_sumE;
+
+    logic raw_predictionF;
+    logic steered_takenF, steered_takenD;
+
+    logic meta_validD, meta_validE;
+
+    logic [199:0] speculative_globalF;
+    logic [15:0] speculative_pathF;
+
+    logic [7:0] active_lengthF [0:7];
+
+    logic actual_jumpD, actual_jumpE;
+    logic retire_or_self_flushE;
+    logic resolve_condE, resolve_jumpE, resolve_cfiE;
+    logic direction_wrongE, trainE, alias_checkE;
+
+    logic [4:0] thres_nextE;
+    logic signed [7:0] tc_nextE;
+    logic signed [8:0] ac_nextE;
+
+    logic switch_shortE, switch_longE;
+
+    logic signed [4:0] f0, f1;
+    logic signed [3:0] f2, f3, f4, f5, f6, f7;
+
+    // Include every supplied unconditional jump class.
+    assign actual_jumpD = JumpD || CallD || ReturnD;
+    assign actual_jumpE = JumpE || CallE || ReturnE;
+
+    // FlushE clears incoming E metadata, but does not by itself
+    // invalidate the resident resolving E instruction.
+    //
+    // FlushM represents an older M-stage squash.
+    //
+    // With the referenced Wally hazard convention:
+    // StallE && FlushE && !FlushM indicates an E self-redirect
+    // that clears E even while it would otherwise be held.
+    assign retire_or_self_flushE =
+        !FlushM && (!StallE || FlushE);
+
+    assign resolve_condE =
+        meta_validE && InstrValidE && BranchE &&
+        retire_or_self_flushE;
+
+    assign resolve_jumpE =
+        meta_validE && InstrValidE && !BranchE &&
+        actual_jumpE && retire_or_self_flushE;
+
+    assign resolve_cfiE = resolve_condE || resolve_jumpE;
+
+    // Original Fetch prediction sum determines correctness.
+    assign direction_wrongE =
+        (prediction_sumE >= 16'sd0) != PCSrcE;
+
+    assign BPDirWrongE =
+        meta_validE && InstrValidE && BranchE &&
+        !FlushM && direction_wrongE;
+
+    // Matches bpred's Fetch steering equation.
+    assign steered_takenF =
+        BPJumpF || (BPBranchF && raw_predictionF);
+
+    // Reconstruct speculative histories from committed state,
+    // followed in program order by live E and D control-flow
+    // instructions.
+    //
+    // The resolved E outcome is available combinationally.
+    // Decode uses the direction actually steered in Fetch.
+    //
+    // No BPWrongE dependency is introduced in this datapath.
+    // Flushes remove younger metadata at the clock edge.
+    always_comb begin : rebuild_speculative_history
+        speculative_globalF = committed_global_history;
+        speculative_pathF = committed_path_history;
+
+        if (meta_validE && InstrValidE) begin
+            if (BranchE || actual_jumpE) begin
+                speculative_globalF = advance_global(
+                    speculative_globalF,
+                    BranchE ? PCSrcE : 1'b1
+                );
+                speculative_pathF = advance_path(
+                    speculative_pathF, PCE[0]
+                );
+            end
+        end
+
+        if (meta_validD && InstrValidD) begin
+            if (BranchD || actual_jumpD) begin
+                speculative_globalF = advance_global(
+                    speculative_globalF,
+                    BranchD ? steered_takenD : 1'b1
+                );
+                speculative_pathF = advance_path(
+                    speculative_pathF, PCD[0]
+                );
+            end
+        end
+    end
+
+    // Corrected standalone v1 threshold semantics.
+    // TC must strictly cross 63 or -64.
+    // Training eligibility uses the updated threshold.
+    always_comb begin : threshold_fit
+        integer signed tc_work;
+        integer signed theta_work;
+        logic low_confidence;
+
+        tc_work = int'($signed(TC));
+        theta_work = int'(thresupdate);
+
+        low_confidence =
+            (int'($signed(prediction_sumE)) >= -theta_work) &&
+            (int'($signed(prediction_sumE)) < theta_work);
+
+        if (resolve_condE) begin
+            if (direction_wrongE) begin
+                tc_work = tc_work + 1;
+
+                if (tc_work > 63) begin
+                    tc_work = 63;
+
+                    if (theta_work < 31) begin
+                        tc_work = 0;
+                        theta_work = theta_work + 1;
+                    end
+                end
+            end else if (low_confidence) begin
+                tc_work = tc_work - 1;
+
+                if (tc_work < -64) begin
+                    tc_work = -64;
+
+                    if (theta_work > 0) begin
+                        theta_work = theta_work - 1;
+                        tc_work = 0;
+                    end
+                end
+            end
+        end
+
+        tc_nextE = tc_work[7:0];
+        thres_nextE = theta_work[4:0];
+
+        trainE = resolve_condE &&
+            (direction_wrongE ||
+             ((int'($signed(prediction_sumE)) >= -theta_work) &&
+              (int'($signed(prediction_sumE)) < theta_work)));
+    end
+
+    assign alias_checkE = trainE && !indicesE[7][0];
+
+    // Original AC and MINITAG fitting calculations.
+    always_comb begin : alias_fit
+        integer signed ac_work;
+
+        ac_work = int'($signed(AC));
+
+        if (alias_checkE && direction_wrongE) begin
+            if (MINITAG[indicesE[7][10:1]] != PCE[0])
+                ac_work = ac_work - 4;
+            else
+                ac_work = ac_work + 1;
+        end
+
+        switch_shortE =
+            alias_checkE && direction_wrongE &&
+            (ac_work < -256);
+
+        switch_longE =
+            alias_checkE && direction_wrongE &&
+            (ac_work > 255);
+
+        if (ac_work < -256)
+            ac_work = -256;
+        else if (ac_work > 255)
+            ac_work = 255;
+
+        ac_nextE = ac_work[8:0];
+    end
+
+    // Forward same-cycle history-length switching to Fetch.
+    always_comb begin : forward_lengths
+        for (int k = 0; k < 8; k = k + 1)
+            active_lengthF[k] = UsedHistLength[k];
+
+        if (switch_shortE) begin
+            active_lengthF[2] = 8'd5;
+            active_lengthF[4] = 8'd12;
+            active_lengthF[6] = 8'd31;
+        end else if (switch_longE) begin
+            active_lengthF[2] = 8'd79;
+            active_lengthF[4] = 8'd125;
+            active_lengthF[6] = 8'd200;
+        end
+    end
+
+    // O-GEHL reads the current Fetch PC.
+    // The referenced BTB uses PCNextF for the next synchronous
+    // read and supplies the prediction corresponding to PCF.
+    always_comb begin : fetch_indices
+        for (int k = 0; k < 8; k = k + 1) begin
+            indicesF[k] = ogehl_index(
+                PCF[31:0],
+                speculative_globalF,
+                speculative_pathF,
+                k,
+                int'(active_lengthF[k])
+            );
+        end
+    end
+
+    // Forward same-cycle Execute table updates into Fetch reads.
+    // The Fetch prediction sum is saved, not recomputed in E.
+    always_comb begin : fetch_prediction
+        f0 = T0[indicesF[0]];
+        f1 = T1[indicesF[1][9:0]];
+        f2 = T2[indicesF[2]];
+        f3 = T3[indicesF[3]];
+        f4 = T4[indicesF[4]];
+        f5 = T5[indicesF[5]];
+        f6 = T6[indicesF[6]];
+        f7 = T7[indicesF[7]];
+
+        if (trainE) begin
+            if (indicesF[0] == indicesE[0])
+                f0 = sat5(f0, PCSrcE);
+            if (indicesF[1] == indicesE[1])
+                f1 = sat5(f1, PCSrcE);
+            if (indicesF[2] == indicesE[2])
+                f2 = sat4(f2, PCSrcE);
+            if (indicesF[3] == indicesE[3])
+                f3 = sat4(f3, PCSrcE);
+            if (indicesF[4] == indicesE[4])
+                f4 = sat4(f4, PCSrcE);
+            if (indicesF[5] == indicesE[5])
+                f5 = sat4(f5, PCSrcE);
+            if (indicesF[6] == indicesE[6])
+                f6 = sat4(f6, PCSrcE);
+            if (indicesF[7] == indicesE[7])
+                f7 = sat4(f7, PCSrcE);
+        end
+
+        prediction_sumF = 16'sd4;
+        prediction_sumF = prediction_sumF + extend5(f0);
+        prediction_sumF = prediction_sumF + extend5(f1);
+        prediction_sumF = prediction_sumF + extend4(f2);
+        prediction_sumF = prediction_sumF + extend4(f3);
+        prediction_sumF = prediction_sumF + extend4(f4);
+        prediction_sumF = prediction_sumF + extend4(f5);
+        prediction_sumF = prediction_sumF + extend4(f6);
+        prediction_sumF = prediction_sumF + extend4(f7);
+
+        raw_predictionF = (prediction_sumF >= 16'sd0);
+    end
+
+    assign BPDirF = {raw_predictionF, raw_predictionF};
+
+    // State updates and predictor metadata pipeline.
+    // All tables and adaptation registers have one sequential writer.
+    always_ff @(posedge clk) begin : predictor_state
+        if (reset) begin
+            for (int i = 0; i < 2048; i = i + 1) begin
+                T0[i] <= '0;
+                if (i < 1024)
+                    T1[i] <= '0;
+                T2[i] <= '0;
+                T3[i] <= '0;
+                T4[i] <= '0;
+                T5[i] <= '0;
+                T6[i] <= '0;
+                T7[i] <= '0;
+                if (i < 1024)
+                    MINITAG[i] <= 1'b0;
+            end
+
+            committed_global_history <= '0;
+            committed_path_history <= '0;
+
+            TC <= '0;
+            AC <= '0;
+            thresupdate <= 5'd8;
+
+            UsedHistLength[0] <= 8'd0;
+            UsedHistLength[1] <= 8'd3;
+            UsedHistLength[2] <= 8'd5;
+            UsedHistLength[3] <= 8'd8;
+            UsedHistLength[4] <= 8'd12;
+            UsedHistLength[5] <= 8'd19;
+            UsedHistLength[6] <= 8'd31;
+            UsedHistLength[7] <= 8'd49;
+
+            meta_validD <= 1'b0;
+            meta_validE <= 1'b0;
+            steered_takenD <= 1'b0;
+
+            prediction_sumD <= '0;
+            prediction_sumE <= '0;
+
+            for (int k = 0; k < 8; k = k + 1) begin
+                indicesD[k] <= '0;
+                indicesE[k] <= '0;
+            end
+        end else begin
+            // Update committed histories once for each accepted
+            // resolved CFI, including calls and returns.
+            if (resolve_cfiE) begin
+                committed_global_history <= advance_global(
+                    committed_global_history,
+                    resolve_jumpE ? 1'b1 : PCSrcE
+                );
+
+                committed_path_history <= advance_path(
+                    committed_path_history, PCE[0]
+                );
+            end
+
+            if (resolve_condE) begin
+                TC <= tc_nextE;
+                thresupdate <= thres_nextE;
+
+                if (trainE) begin
+                    T0[indicesE[0]] <=
+                        sat5(T0[indicesE[0]], PCSrcE);
+                    T1[indicesE[1][9:0]] <=
+                        sat5(T1[indicesE[1][9:0]], PCSrcE);
+                    T2[indicesE[2]] <=
+                        sat4(T2[indicesE[2]], PCSrcE);
+                    T3[indicesE[3]] <=
+                        sat4(T3[indicesE[3]], PCSrcE);
+                    T4[indicesE[4]] <=
+                        sat4(T4[indicesE[4]], PCSrcE);
+                    T5[indicesE[5]] <=
+                        sat4(T5[indicesE[5]], PCSrcE);
+                    T6[indicesE[6]] <=
+                        sat4(T6[indicesE[6]], PCSrcE);
+                    T7[indicesE[7]] <=
+                        sat4(T7[indicesE[7]], PCSrcE);
+
+                    if (alias_checkE) begin
+                        MINITAG[indicesE[7][10:1]] <= PCE[0];
+
+                        if (direction_wrongE) begin
+                            AC <= ac_nextE;
+
+                            if (switch_shortE) begin
+                                UsedHistLength[2] <= 8'd5;
+                                UsedHistLength[4] <= 8'd12;
+                                UsedHistLength[6] <= 8'd31;
+                            end else if (switch_longE) begin
+                                UsedHistLength[2] <= 8'd79;
+                                UsedHistLength[4] <= 8'd125;
+                                UsedHistLength[6] <= 8'd200;
+                            end
+                        end
+                    end
+                end
+            end
+
+            // F->D: clear has priority over hold.
+            if (FlushD) begin
+                meta_validD <= 1'b0;
+            end else if (!StallD) begin
+                meta_validD <= 1'b1;
+
+                for (int k = 0; k < 8; k = k + 1)
+                    indicesD[k] <= indicesF[k];
+
+                prediction_sumD <= prediction_sumF;
+                steered_takenD <= steered_takenF;
+            end
+
+            // D->E: independent FlushE/StallE controls.
+            // FlushD does not suppress an otherwise valid D->E
+            // transfer of the already resident Decode instruction.
+            if (FlushE) begin
+                meta_validE <= 1'b0;
+            end else if (!StallE) begin
+                meta_validE <= meta_validD && InstrValidD;
+
+                for (int k = 0; k < 8; k = k + 1)
+                    indicesE[k] <= indicesD[k];
+
+                prediction_sumE <= prediction_sumD;
+            end
+        end
+    end
+
+endmodule

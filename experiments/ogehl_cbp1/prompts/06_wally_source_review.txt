@@ -1,0 +1,13 @@
+I forgot to attach `hazard.sv` and `btb.sv` for the previous revision. They are now attached from the exact CORE-V-Wally revision we're using.
+
+Please review your generated `ogehl_wally_v1.sv` against these files, focusing on:
+
+1. Whether its stall and flush handling matches Wally's actual pipeline semantics.
+2. Whether its Fetch predictions and metadata align correctly with the BTB.
+3. Whether Execute-stage branch resolution and older Memory-stage flushes are distinguished correctly.
+4. Whether speculative global/path history reconstruction can include instructions that should have been squashed.
+5. Whether any additional interface signals or RTL changes are necessary.
+
+Identify definite bugs separately from potential timing or verification concerns.
+
+**Do not generate replacement RTL yet.** Report your findings and the specific corrections required, if any.

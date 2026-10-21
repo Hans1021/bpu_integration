@@ -1,0 +1,29 @@
+Revise your generated `ogehl_wally.sv` using the architectural review you just performed and the attached CORE-V-Wally `hazard.sv` and `btb.sv`.
+
+Preserve the standalone O-GEHL v1 implementation unchanged.
+
+Correct the following:
+
+1. Carry the original signed Fetch prediction sum through Decode and Execute. Use it for training eligibility, misprediction determination, threshold fitting, and alias adaptation. Do not recompute the sum from updated counters in Execute.
+2. Align predictor metadata with Wally's actual pipeline registers, including the correct stall and flush priorities. Do not incorrectly discard Decode metadata merely because `FlushD` is asserted.
+3. Remove the unnecessary `InstrValidF` port if the existing stage-valid and transfer signals are sufficient.
+4. Ensure actual conditional branches and unconditional jumps update committed histories exactly once. Correctly recover speculative histories after redirects and squash events.
+5. Distinguish Execute branch mispredictions from older Memory-stage flushes that kill Execute instructions.
+6. Review `BPWrongE` dependencies and avoid unnecessary combinational feedback or excessive timing paths.
+7. Correctly align Fetch predictions with Wally's BTB and instruction pipeline.
+8. Preserve the original O-GEHL indexing, counter behavior, threshold adaptation, MINITAG handling, and dynamic history-length selection.
+9. Implement any necessary same-cycle training and history-length forwarding without changing the original algorithm.
+
+The previous Verilator 5.036 lint passed without errors but reported five warnings:
+
+- `DECLFILENAME`: source filename `ogehl_wally_v0.sv` differs from module name `ogehl_wally`.
+- `UNUSEDSIGNAL`: unused `PCD[31:1]`.
+- `UNUSEDSIGNAL`: unused `PCE[31:1]`.
+- `UNUSEDSIGNAL`: unused oldest bit `history[199]` in the global-history shift function.
+- `UNUSEDSIGNAL`: unused oldest bit `history[15]` in the path-history shift function.
+
+Address genuine unused interfaces where appropriate. Do not alter correct shift-register semantics merely to eliminate expected unused-bit warnings. The filename warning is expected because we preserve versioned RTL files.
+
+If a required architectural behavior still cannot be implemented using the available inputs, explicitly identify the missing information rather than inventing a workaround.
+
+Produce the complete revised synthesizable SystemVerilog module `ogehl_wally`, followed by a concise explanation of corrections and remaining limitations. Do not claim successful verification without testing.

@@ -1,0 +1,21 @@
+Review your generated `ogehl_wally.sv` for architectural correctness before integration.
+
+The module passes Verilator 5.036 lint with no errors and five nonfatal warnings.
+
+I inspected Wally and confirmed:
+
+- `bpred.sv` has `InstrValidD` and `InstrValidE`, but no `InstrValidF`.
+- `BPWrongE` is calculated as `(PCCorrectE != PCD) & InstrValidE & InstrValidD`.
+- Wally provides `StallF/D/E`, `FlushD/E`, `BranchD/E`, `JumpD/E`, `PCSrcE`, and the stage PCs.
+- The verified standalone O-GEHL v1 must remain unchanged.
+
+Before producing revised RTL, examine these issues:
+
+1. Is `InstrValidF` genuinely necessary? If so, identify precisely how Wally should generate it. Do not invent an instruction-valid signal or tie it high without justification.
+2. Can using `BPWrongE` inside the predictor create a combinational feedback loop through Fetch prediction or next-PC selection? Explain the dependencies and propose a safe solution.
+3. Check metadata alignment across stalls and flushes, especially whether a Decode branch can be incorrectly discarded or duplicated.
+4. Ensure recovery handles wrong-target and instruction-class predictions, not only direction mispredictions.
+5. Compare the generated indexing, training, and adaptation logic against the verified standalone v1, identifying any algorithmic differences.
+6. Check whether recomputing the training sum at Execute changes the original training behavior. If necessary, preserve the original Fetch-time prediction sum as metadata.
+
+First report your findings and proposed corrections. **Do not generate replacement RTL yet.** If additional Wally source files are needed to settle an issue, name the files and exact signals you need.

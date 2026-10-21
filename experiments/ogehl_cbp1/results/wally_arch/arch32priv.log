@@ -1,0 +1,22 @@
+rv32i_m/privilege/src/ebreak.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/ecall.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign2-jalr-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-beq-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-bge-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-bgeu-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-blt-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-bltu-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-bne-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-jal-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-lh-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-lhu-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-lw-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-sh-01.S succeeded.  Brilliant!!!
+rv32i_m/privilege/src/misalign-sw-01.S succeeded.  Brilliant!!!
+SUCCESS! All tests ran without failures.
+- /home/hansyang/projects/bpu_integration/cvw/testbench/testbench.sv:510: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.036 2025-04-27
+- Verilator: $finish at 128ns; walltime 0.653 s; speed 203.576 ns/s
+- Verilator: cpu 0.631 s on 1 threads; alloced 326 MB
+Config=bpred_OGEHL_LLM_rv32gc tests=arch32priv sim=verilator gui=False args='' params='' define=''
+Running Verilator on bpred_OGEHL_LLM_rv32gc arch32priv

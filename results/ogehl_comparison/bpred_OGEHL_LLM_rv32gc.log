@@ -1,0 +1,1233 @@
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/aha-mont64/aha-mont64.elf.memfile
+Cnt[ 0] = 4613108 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 4475855 InstRet
+Cnt[ 3] =  458110 Br Count
+Cnt[ 4] =    4233 Jump Not Return
+Cnt[ 5] =    1271 Return
+Cnt[ 6] =     308 BP Wrong
+Cnt[ 7] =     304 BP Dir Wrong
+Cnt[ 8] =       3 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =       4 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/aha-mont64/aha-mont64 is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/aha-mont64/aha-mont64.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/crc32/crc32.elf.memfile
+Cnt[ 0] = 3831533 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3831155 InstRet
+Cnt[ 3] =  174251 Br Count
+Cnt[ 4] =  174253 Jump Not Return
+Cnt[ 5] =  174252 Return
+Cnt[ 6] =     180 BP Wrong
+Cnt[ 7] =     173 BP Dir Wrong
+Cnt[ 8] =       3 BP Target Wrong
+Cnt[ 9] =       2 RAS Wrong
+Cnt[10] =       3 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/crc32/crc32 is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/crc32/crc32.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/cubic/cubic.elf.memfile
+Cnt[ 0] = 8850208 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 6937961 InstRet
+Cnt[ 3] =  714091 Br Count
+Cnt[ 4] =  106783 Jump Not Return
+Cnt[ 5] =   43163 Return
+Cnt[ 6] =  378183 BP Wrong
+Cnt[ 7] =   12384 BP Dir Wrong
+Cnt[ 8] =  166245 BP Target Wrong
+Cnt[ 9] =    1036 RAS Wrong
+Cnt[10] =  487565 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/cubic/cubic is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/cubic/cubic.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/edn/edn.elf.memfile
+Cnt[ 0] = 3745498 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3466232 InstRet
+Cnt[ 3] =  355135 Br Count
+Cnt[ 4] =     438 Jump Not Return
+Cnt[ 5] =     351 Return
+Cnt[ 6] =     964 BP Wrong
+Cnt[ 7] =     955 BP Dir Wrong
+Cnt[ 8] =       3 BP Target Wrong
+Cnt[ 9] =       2 RAS Wrong
+Cnt[10] =       8 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/edn/edn is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/edn/edn.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/huffbench/huffbench.elf.memfile
+Cnt[ 0] = 2306377 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2130888 InstRet
+Cnt[ 3] =  499027 Br Count
+Cnt[ 4] =   21981 Jump Not Return
+Cnt[ 5] =    1147 Return
+Cnt[ 6] =   29757 BP Wrong
+Cnt[ 7] =   29685 BP Dir Wrong
+Cnt[ 8] =      36 BP Target Wrong
+Cnt[ 9] =       1 RAS Wrong
+Cnt[10] =     111 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/huffbench/huffbench is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/huffbench/huffbench.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/matmult-int/matmult-int.elf.memfile
+Cnt[ 0] = 3563466 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3179341 InstRet
+Cnt[ 3] =  396567 Br Count
+Cnt[ 4] =      49 Jump Not Return
+Cnt[ 5] =      49 Return
+Cnt[ 6] =    1153 BP Wrong
+Cnt[ 7] =    1148 BP Dir Wrong
+Cnt[ 8] =       2 BP Target Wrong
+Cnt[ 9] =       2 RAS Wrong
+Cnt[10] =       3 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/matmult-int/matmult-int is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/matmult-int/matmult-int.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/md5sum/md5sum.elf.memfile
+Cnt[ 0] = 2103295 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2046107 InstRet
+Cnt[ 3] =  229399 Br Count
+Cnt[ 4] =   39783 Jump Not Return
+Cnt[ 5] =     410 Return
+Cnt[ 6] =     510 BP Wrong
+Cnt[ 7] =     345 BP Dir Wrong
+Cnt[ 8] =     105 BP Target Wrong
+Cnt[ 9] =       2 RAS Wrong
+Cnt[10] =     210 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/md5sum/md5sum is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/md5sum/md5sum.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/minver/minver.elf.memfile
+Cnt[ 0] = 5935104 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 4864095 InstRet
+Cnt[ 3] =  675436 Br Count
+Cnt[ 4] =  145413 Jump Not Return
+Cnt[ 5] =   67158 Return
+Cnt[ 6] =  160043 BP Wrong
+Cnt[ 7] =     226 BP Dir Wrong
+Cnt[ 8] =   72154 BP Target Wrong
+Cnt[ 9] =     557 RAS Wrong
+Cnt[10] =  194266 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/minver/minver is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/minver/minver.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/nettle-aes/nettle-aes.elf.memfile
+Cnt[ 0] = 4294884 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 4083435 InstRet
+Cnt[ 3] =   70435 Br Count
+Cnt[ 4] =     627 Jump Not Return
+Cnt[ 5] =     393 Return
+Cnt[ 6] =    1975 BP Wrong
+Cnt[ 7] =     320 BP Dir Wrong
+Cnt[ 8] =     626 BP Target Wrong
+Cnt[ 9] =      17 RAS Wrong
+Cnt[10] =    1881 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/nettle-aes/nettle-aes is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/nettle-aes/nettle-aes.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/nettle-sha256/nettle-sha256.elf.memfile
+Cnt[ 0] = 4046659 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3854213 InstRet
+Cnt[ 3] =   38476 Br Count
+Cnt[ 4] =    6178 Jump Not Return
+Cnt[ 5] =    3328 Return
+Cnt[ 6] =   34225 BP Wrong
+Cnt[ 7] =      17 BP Dir Wrong
+Cnt[ 8] =   11402 BP Target Wrong
+Cnt[ 9] =       4 RAS Wrong
+Cnt[10] =   40862 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/nettle-sha256/nettle-sha256 is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/nettle-sha256/nettle-sha256.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/nsichneu/nsichneu.elf.memfile
+Cnt[ 0] = 4836883 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2236758 InstRet
+Cnt[ 3] =  769376 Br Count
+Cnt[ 4] =  236355 Jump Not Return
+Cnt[ 5] =       3 Return
+Cnt[ 6] =  679531 BP Wrong
+Cnt[ 7] =       8 BP Dir Wrong
+Cnt[ 8] =  364380 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] = 1020515 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/nsichneu/nsichneu is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/nsichneu/nsichneu.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/nbody/nbody.elf.memfile
+Cnt[ 0] = 3985795 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3440964 InstRet
+Cnt[ 3] =  432339 Br Count
+Cnt[ 4] =   67006 Jump Not Return
+Cnt[ 5] =   25050 Return
+Cnt[ 6] =  168625 BP Wrong
+Cnt[ 7] =     137 BP Dir Wrong
+Cnt[ 8] =   69050 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =  220469 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/nbody/nbody is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/nbody/nbody.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/picojpeg/picojpeg.elf.memfile
+Cnt[ 0] = 3564388 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3376014 InstRet
+Cnt[ 3] =  343537 Br Count
+Cnt[ 4] =   43173 Jump Not Return
+Cnt[ 5] =   24375 Return
+Cnt[ 6] =   26413 BP Wrong
+Cnt[ 7] =    6551 BP Dir Wrong
+Cnt[ 8] =    8804 BP Target Wrong
+Cnt[ 9] =      44 RAS Wrong
+Cnt[10] =   26433 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/picojpeg/picojpeg is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/picojpeg/picojpeg.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/primecount/primecount.elf.memfile
+Cnt[ 0] = 2676592 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2148516 InstRet
+Cnt[ 3] =  847437 Br Count
+Cnt[ 4] =   65720 Jump Not Return
+Cnt[ 5] =       3 Return
+Cnt[ 6] =   43380 BP Wrong
+Cnt[ 7] =   43377 BP Dir Wrong
+Cnt[ 8] =       3 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =       3 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/primecount/primecount is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/primecount/primecount.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/qrduino/qrduino.elf.memfile
+Cnt[ 0] = 3124036 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2775797 InstRet
+Cnt[ 3] =  385081 Br Count
+Cnt[ 4] =   20338 Jump Not Return
+Cnt[ 5] =    2213 Return
+Cnt[ 6] =   59752 BP Wrong
+Cnt[ 7] =   55194 BP Dir Wrong
+Cnt[ 8] =    3528 BP Target Wrong
+Cnt[ 9] =      35 RAS Wrong
+Cnt[10] =    6643 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/qrduino/qrduino is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/qrduino/qrduino.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/sglib-combined/sglib-combined.elf.memfile
+Cnt[ 0] = 2597595 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2315305 InstRet
+Cnt[ 3] =  511242 Br Count
+Cnt[ 4] =   78738 Jump Not Return
+Cnt[ 5] =   30394 Return
+Cnt[ 6] =   15815 BP Wrong
+Cnt[ 7] =    6805 BP Dir Wrong
+Cnt[ 8] =    3340 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =   23042 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/sglib-combined/sglib-combined is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/sglib-combined/sglib-combined.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/slre/slre.elf.memfile
+Cnt[ 0] = 2615679 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2493849 InstRet
+Cnt[ 3] =  502481 Br Count
+Cnt[ 4] =   57313 Jump Not Return
+Cnt[ 5] =   36192 Return
+Cnt[ 6] =   14274 BP Wrong
+Cnt[ 7] =    2426 BP Dir Wrong
+Cnt[ 8] =    4293 BP Target Wrong
+Cnt[ 9] =     421 RAS Wrong
+Cnt[10] =   16300 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/slre/slre is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/slre/slre.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/st/st.elf.memfile
+Cnt[ 0] = 4473646 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3826896 InstRet
+Cnt[ 3] =  406914 Br Count
+Cnt[ 4] =   73791 Jump Not Return
+Cnt[ 5] =   41018 Return
+Cnt[ 6] =   91464 BP Wrong
+Cnt[ 7] =    3020 BP Dir Wrong
+Cnt[ 8] =   30840 BP Target Wrong
+Cnt[ 9] =      28 RAS Wrong
+Cnt[10] =  119041 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/st/st is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/st/st.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/statemate/statemate.elf.memfile
+Cnt[ 0] = 1276729 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 1117549 InstRet
+Cnt[ 3] =  106057 Br Count
+Cnt[ 4] =   23571 Jump Not Return
+Cnt[ 5] =   17679 Return
+Cnt[ 6] =    7877 BP Wrong
+Cnt[ 7] =      10 BP Dir Wrong
+Cnt[ 8] =       4 BP Target Wrong
+Cnt[ 9] =       2 RAS Wrong
+Cnt[10] =   11793 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/statemate/statemate is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/statemate/statemate.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/tarfind/tarfind.elf.memfile
+Cnt[ 0] = 1219630 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 1161847 InstRet
+Cnt[ 3] =  106973 Br Count
+Cnt[ 4] =   42679 Jump Not Return
+Cnt[ 5] =   39529 Return
+Cnt[ 6] =    5522 BP Wrong
+Cnt[ 7] =    2413 BP Dir Wrong
+Cnt[ 8] =    3105 BP Target Wrong
+Cnt[ 9] =       2 RAS Wrong
+Cnt[10] =       4 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/tarfind/tarfind is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/tarfind/tarfind.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/ud/ud.elf.memfile
+Cnt[ 0] = 4067678 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3295987 InstRet
+Cnt[ 3] =  465571 Br Count
+Cnt[ 4] =   78337 Jump Not Return
+Cnt[ 5] =   36952 Return
+Cnt[ 6] =   32603 BP Wrong
+Cnt[ 7] =      83 BP Dir Wrong
+Cnt[ 8] =    7393 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =   38433 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/ud/ud is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/ud/ud.sim.output
+Read memfile ../../addins/embench-iot/bd_speedopt_speed/src/wikisort/wikisort.elf.memfile
+Cnt[ 0] = 1517199 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 1223727 InstRet
+Cnt[ 3] =  130884 Br Count
+Cnt[ 4] =   43683 Jump Not Return
+Cnt[ 5] =   34491 Return
+Cnt[ 6] =   49391 BP Wrong
+Cnt[ 7] =    2700 BP Dir Wrong
+Cnt[ 8] =   17854 BP Target Wrong
+Cnt[ 9] =    1594 RAS Wrong
+Cnt[10] =   59770 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_speedopt_speed/src/wikisort/wikisort is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_speedopt_speed/src/wikisort/wikisort.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/aha-mont64/aha-mont64.elf.memfile
+Cnt[ 0] = 4627821 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 4583674 InstRet
+Cnt[ 3] =  458533 Br Count
+Cnt[ 4] =   35958 Jump Not Return
+Cnt[ 5] =    8462 Return
+Cnt[ 6] =     473 BP Wrong
+Cnt[ 7] =     468 BP Dir Wrong
+Cnt[ 8] =       3 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =       2 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/aha-mont64/aha-mont64 is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/aha-mont64/aha-mont64.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/crc32/crc32.elf.memfile
+Cnt[ 0] = 3834395 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3834036 InstRet
+Cnt[ 3] =  174251 Br Count
+Cnt[ 4] =  174593 Jump Not Return
+Cnt[ 5] =  174422 Return
+Cnt[ 6] =     179 BP Wrong
+Cnt[ 7] =     172 BP Dir Wrong
+Cnt[ 8] =       3 BP Target Wrong
+Cnt[ 9] =       2 RAS Wrong
+Cnt[10] =       3 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/crc32/crc32 is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/crc32/crc32.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/cubic/cubic.elf.memfile
+Cnt[ 0] = 8884058 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 6943819 InstRet
+Cnt[ 3] =  714691 Br Count
+Cnt[ 4] =  106723 Jump Not Return
+Cnt[ 5] =   43203 Return
+Cnt[ 6] =  376798 BP Wrong
+Cnt[ 7] =   12168 BP Dir Wrong
+Cnt[ 8] =  164772 BP Target Wrong
+Cnt[ 9] =    1742 RAS Wrong
+Cnt[10] =  500051 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/cubic/cubic is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/cubic/cubic.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/edn/edn.elf.memfile
+Cnt[ 0] = 4169130 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3823781 InstRet
+Cnt[ 3] =  362704 Br Count
+Cnt[ 4] =   11226 Jump Not Return
+Cnt[ 5] =     786 Return
+Cnt[ 6] =    1067 BP Wrong
+Cnt[ 7] =    1060 BP Dir Wrong
+Cnt[ 8] =       3 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =       7 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/edn/edn is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/edn/edn.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/huffbench/huffbench.elf.memfile
+Cnt[ 0] = 2860045 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2393433 InstRet
+Cnt[ 3] =  499049 Br Count
+Cnt[ 4] =  198872 Jump Not Return
+Cnt[ 5] =    1158 Return
+Cnt[ 6] =   34207 BP Wrong
+Cnt[ 7] =   33908 BP Dir Wrong
+Cnt[ 8] =     127 BP Target Wrong
+Cnt[ 9] =      11 RAS Wrong
+Cnt[10] =     407 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/huffbench/huffbench is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/huffbench/huffbench.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/matmult-int/matmult-int.elf.memfile
+Cnt[ 0] = 3567734 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3557405 InstRet
+Cnt[ 3] =  392335 Br Count
+Cnt[ 4] =     279 Jump Not Return
+Cnt[ 5] =     141 Return
+Cnt[ 6] =    1070 BP Wrong
+Cnt[ 7] =    1065 BP Dir Wrong
+Cnt[ 8] =       2 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =       4 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/matmult-int/matmult-int is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/matmult-int/matmult-int.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/md5sum/md5sum.elf.memfile
+Cnt[ 0] = 2014426 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 1994495 InstRet
+Cnt[ 3] =  229603 Br Count
+Cnt[ 4] =  118476 Jump Not Return
+Cnt[ 5] =     614 Return
+Cnt[ 6] =    1133 BP Wrong
+Cnt[ 7] =    1129 BP Dir Wrong
+Cnt[ 8] =       2 BP Target Wrong
+Cnt[ 9] =       2 RAS Wrong
+Cnt[10] =       1 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/md5sum/md5sum is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/md5sum/md5sum.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/minver/minver.elf.memfile
+Cnt[ 0] = 6191965 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 5129905 InstRet
+Cnt[ 3] =  710956 Br Count
+Cnt[ 4] =  166503 Jump Not Return
+Cnt[ 5] =   69378 Return
+Cnt[ 6] =  155572 BP Wrong
+Cnt[ 7] =     249 BP Dir Wrong
+Cnt[ 8] =   61055 BP Target Wrong
+Cnt[ 9] =    1662 RAS Wrong
+Cnt[10] =  184830 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/minver/minver is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/minver/minver.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/nbody/nbody.elf.memfile
+Cnt[ 0] = 3986972 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3433009 InstRet
+Cnt[ 3] =  433040 Br Count
+Cnt[ 4] =   68613 Jump Not Return
+Cnt[ 5] =   25051 Return
+Cnt[ 6] =  163298 BP Wrong
+Cnt[ 7] =     127 BP Dir Wrong
+Cnt[ 8] =   67257 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =  222850 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/nbody/nbody is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/nbody/nbody.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/nettle-aes/nettle-aes.elf.memfile
+Cnt[ 0] = 4918185 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 4588159 InstRet
+Cnt[ 3] =   71059 Br Count
+Cnt[ 4] =   46725 Jump Not Return
+Cnt[ 5] =     471 Return
+Cnt[ 6] =    3700 BP Wrong
+Cnt[ 7] =     503 BP Dir Wrong
+Cnt[ 8] =    1406 BP Target Wrong
+Cnt[ 9] =     163 RAS Wrong
+Cnt[10] =    3128 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/nettle-aes/nettle-aes is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/nettle-aes/nettle-aes.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/nettle-sha256/nettle-sha256.elf.memfile
+Cnt[ 0] = 4153500 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3905487 InstRet
+Cnt[ 3] =   53676 Br Count
+Cnt[ 4] =   14253 Jump Not Return
+Cnt[ 5] =    6653 Return
+Cnt[ 6] =   45147 BP Wrong
+Cnt[ 7] =      17 BP Dir Wrong
+Cnt[ 8] =   16628 BP Target Wrong
+Cnt[ 9] =     477 RAS Wrong
+Cnt[10] =   53206 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/nettle-sha256/nettle-sha256 is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/nettle-sha256/nettle-sha256.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/nsichneu/nsichneu.elf.memfile
+Cnt[ 0] = 3230232 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2001636 InstRet
+Cnt[ 3] =  769376 Br Count
+Cnt[ 4] =    1233 Jump Not Return
+Cnt[ 5] =       3 Return
+Cnt[ 6] =  283171 BP Wrong
+Cnt[ 7] =       5 BP Dir Wrong
+Cnt[ 8] =  136646 BP Target Wrong
+Cnt[ 9] =       1 RAS Wrong
+Cnt[10] =  737387 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/nsichneu/nsichneu is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/nsichneu/nsichneu.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/picojpeg/picojpeg.elf.memfile
+Cnt[ 0] = 4515649 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 4281486 InstRet
+Cnt[ 3] =  346945 Br Count
+Cnt[ 4] =  228543 Jump Not Return
+Cnt[ 5] =  139179 Return
+Cnt[ 6] =   31241 BP Wrong
+Cnt[ 7] =   10032 BP Dir Wrong
+Cnt[ 8] =    9614 BP Target Wrong
+Cnt[ 9] =     337 RAS Wrong
+Cnt[10] =   29706 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/picojpeg/picojpeg is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/picojpeg/picojpeg.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/primecount/primecount.elf.memfile
+Cnt[ 0] = 2923781 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2273878 InstRet
+Cnt[ 3] =  847437 Br Count
+Cnt[ 4] =   65762 Jump Not Return
+Cnt[ 5] =       3 Return
+Cnt[ 6] =   42761 BP Wrong
+Cnt[ 7] =   42757 BP Dir Wrong
+Cnt[ 8] =       3 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =       4 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/primecount/primecount is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/primecount/primecount.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/qrduino/qrduino.elf.memfile
+Cnt[ 0] = 3452600 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2974906 InstRet
+Cnt[ 3] =  406391 Br Count
+Cnt[ 4] =  134038 Jump Not Return
+Cnt[ 5] =   21693 Return
+Cnt[ 6] =   66958 BP Wrong
+Cnt[ 7] =   56242 BP Dir Wrong
+Cnt[ 8] =    6362 BP Target Wrong
+Cnt[ 9] =      61 RAS Wrong
+Cnt[10] =   16310 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/qrduino/qrduino is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/qrduino/qrduino.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/sglib-combined/sglib-combined.elf.memfile
+Cnt[ 0] = 3203746 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2597055 InstRet
+Cnt[ 3] =  547666 Br Count
+Cnt[ 4] =  178469 Jump Not Return
+Cnt[ 5] =   51390 Return
+Cnt[ 6] =   41070 BP Wrong
+Cnt[ 7] =    9560 BP Dir Wrong
+Cnt[ 8] =   15068 BP Target Wrong
+Cnt[ 9] =      61 RAS Wrong
+Cnt[10] =   41500 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/sglib-combined/sglib-combined is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/sglib-combined/sglib-combined.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/slre/slre.elf.memfile
+Cnt[ 0] = 3134545 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2908218 InstRet
+Cnt[ 3] =  580581 Br Count
+Cnt[ 4] =  218793 Jump Not Return
+Cnt[ 5] =   88112 Return
+Cnt[ 6] =   20319 BP Wrong
+Cnt[ 7] =    3571 BP Dir Wrong
+Cnt[ 8] =    6163 BP Target Wrong
+Cnt[ 9] =     785 RAS Wrong
+Cnt[10] =   18708 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/slre/slre is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/slre/slre.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/st/st.elf.memfile
+Cnt[ 0] = 4572763 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3858242 InstRet
+Cnt[ 3] =  412062 Br Count
+Cnt[ 4] =   77353 Jump Not Return
+Cnt[ 5] =   43878 Return
+Cnt[ 6] =  114877 BP Wrong
+Cnt[ 7] =    3127 BP Dir Wrong
+Cnt[ 8] =   40838 BP Target Wrong
+Cnt[ 9] =     106 RAS Wrong
+Cnt[10] =  142216 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/st/st is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/st/st.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/statemate/statemate.elf.memfile
+Cnt[ 0] = 1801060 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 1219677 InstRet
+Cnt[ 3] =  108021 Br Count
+Cnt[ 4] =   33391 Jump Not Return
+Cnt[ 5] =   25535 Return
+Cnt[ 6] =    9830 BP Wrong
+Cnt[ 7] =       5 BP Dir Wrong
+Cnt[ 8] =    5895 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =    7860 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/statemate/statemate is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/statemate/statemate.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/tarfind/tarfind.elf.memfile
+Cnt[ 0] = 1669012 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 1013839 InstRet
+Cnt[ 3] =  106973 Br Count
+Cnt[ 4] =   48460 Jump Not Return
+Cnt[ 5] =   39529 Return
+Cnt[ 6] =    5551 BP Wrong
+Cnt[ 7] =    2442 BP Dir Wrong
+Cnt[ 8] =    3105 BP Target Wrong
+Cnt[ 9] =       2 RAS Wrong
+Cnt[10] =       4 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/tarfind/tarfind is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/tarfind/tarfind.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/ud/ud.elf.memfile
+Cnt[ 0] = 4289328 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 3572374 InstRet
+Cnt[ 3] =  490697 Br Count
+Cnt[ 4] =  164061 Jump Not Return
+Cnt[ 5] =   36952 Return
+Cnt[ 6] =   39967 BP Wrong
+Cnt[ 7] =    7445 BP Dir Wrong
+Cnt[ 8] =   13305 BP Target Wrong
+Cnt[ 9] =       0 RAS Wrong
+Cnt[10] =   38432 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/ud/ud is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/ud/ud.sim.output
+Read memfile ../../addins/embench-iot/bd_sizeopt_speed/src/wikisort/wikisort.elf.memfile
+Cnt[ 0] = 1560341 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 1219417 InstRet
+Cnt[ 3] =  130891 Br Count
+Cnt[ 4] =   60968 Jump Not Return
+Cnt[ 5] =   34501 Return
+Cnt[ 6] =   41610 BP Wrong
+Cnt[ 7] =    2867 BP Dir Wrong
+Cnt[ 8] =   14754 BP Target Wrong
+Cnt[ 9] =    1658 RAS Wrong
+Cnt[10] =   53009 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Embench Benchmark: bd_sizeopt_speed/src/wikisort/wikisort is done.
+Embench Benchmark: created output file: ../../addins/embench-iot/bd_sizeopt_speed/src/wikisort/wikisort.sim.output
+SUCCESS! All tests ran without failures.

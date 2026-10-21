@@ -1,0 +1,538 @@
+O-GEHL for CORE-V-Wally
+I’ve prepared a separate ogehl_wally module based on the standalone v1 implementation and the supplied gshare_llm.sv and bpred.sv interfaces.
+The design retains the original CBP-1 O-GEHL tables, indexing, biased prediction sum, signed saturating counters, threshold fitting, alias tags, and dynamic history-length selection.
+The main architectural changes are Fetch-to-Execute prediction metadata, speculative global and path history reconstruction, Execute-stage training, and squash handling.
+One interface addition is required: bpred.sv exposes InstrValidD and InstrValidE, but not an explicit Fetch instruction-valid signal. The module therefore has an InstrValidF input that must be supplied by the integration logic. Tying it permanently high would not be equivalent to a trustworthy instruction-valid indication.
+Download ogehl_wally.sv
+Complete SystemVerilog source
+
+ // CORE-V-Wally O-GEHL; original CBP-1 tables/index/fitting rules.
+ // Requires an explicit, valid Fetch transfer qualifier (InstrValidF).
+ // All prediction-counter updates occur at Execute resolution.
+ module ogehl_wally #(
+     parameter int XLEN = 32
+ ) (
+     input  logic             clk,
+     input  logic             reset,
+     input  logic             StallF,
+     input  logic             StallD,
+     input  logic             StallE,
+     input  logic             FlushD,
+     input  logic             FlushE,
+     input  logic             InstrValidF, // Additional upstream integration signal
+     input  logic             InstrValidD,
+     input  logic             InstrValidE,
+     input  logic [XLEN-1:0]  PCF,
+     input  logic [XLEN-1:0]  PCD,
+     input  logic [XLEN-1:0]  PCE,
+     input  logic             BPBranchF,
+     input  logic             BPJumpF,
+     input  logic             BranchD,
+     input  logic             JumpD,
+     input  logic             BranchE,
+     input  logic             JumpE,
+     input  logic             PCSrcE,
+     input  logic             BPWrongE,    // External redirect/squash of younger work
+     output logic [1:0]       BPDirF,
+     output logic             BPDirWrongE
+ );
+
+     // Logical predictor tables: 10,240 + 5,120 + 49,152 = 64,512
+     // counter bits; plus 1,024 MINITAG bits = 65,536 bits.
+     logic signed [4:0] T0 [0:2047];
+     logic signed [4:0] T1 [0:1023];
+     logic signed [3:0] T2 [0:2047];
+     logic signed [3:0] T3 [0:2047];
+     logic signed [3:0] T4 [0:2047];
+     logic signed [3:0] T5 [0:2047];
+     logic signed [3:0] T6 [0:2047];
+     logic signed [3:0] T7 [0:2047];
+     logic              MINITAG [0:1023];
+
+     // Newest history event/path bit is bit zero.
+     logic [199:0] committed_global_history;
+     logic [15:0]  committed_path_history;
+
+     // State ranges: TC = [-64,63], AC = [-256,255].
+     logic signed [7:0] TC;
+     logic signed [8:0] AC;
+     logic [4:0]        thresupdate;
+     logic [7:0]        UsedHistLength [0:7];
+
+     // The combinational index is 11 bits except for T1 (10 bits).
+     // For T1, bit 10 of the result is always zero.
+     function automatic logic [10:0] ogehl_index (
+         input logic [31:0]  pc,
+         input logic [199:0] gh,
+         input logic [15:0]  ph,
+         input integer      table_number,
+         input integer      m
+     );
+         integer w;
+         integer n;
+         integer p;
+         integer min_add;
+         integer funct;
+         integer j;
+         integer source_pos;
+         integer rotation;
+         integer chunk_number;
+         logic         selected_bit;
+         logic [32:0]  inter;
+         logic [32:0]  remaining;
+         logic [10:0]  chunk;
+         logic [10:0]  rotated;
+         logic [10:0]  result;
+         begin
+             w = (table_number == 1) ? 10 : 11;
+             n = 3 * w;
+             p = (m < 16) ? m : 16;
+             min_add = n - m - p;
+             if (min_add > 20)
+                 min_add = 20;
+             funct = (table_number & 3) + 1;
+             inter = '0;
+             source_pos = 0;
+             selected_bit = 1'b0;
+
+             if (min_add >= 8) begin
+                 // Case A: [GHR(m), PC(min_add), PHR(p)] from MSB
+                 // to LSB, with leading zeros to the n-bit width.
+                 // Fixed loop bound is intentional for synthesis.
+                 for (j = 0; j < 33; j = j + 1) begin
+                     if (j < n) begin
+                         if (j < p)
+                             inter[j] = ph[j];
+                         else if (j < p + min_add)
+                             inter[j] = pc[j - p];
+                         else if (j < p + min_add + m)
+                             inter[j] = gh[j - p - min_add];
+                     end
+                 end
+             end else begin
+                 // Case B: distributed selection from source positions
+                 // [0,m-1]=GHR, [m,m+7]=PC, then PHR.
+                 // First selected source bit becomes the MSB of the
+                 // n-bit sequence; each next bit is appended at LSB.
+                 for (j = 0; j < 33; j = j + 1) begin
+                     if (j < n) begin
+                         source_pos = (j * (8 + m + p - 1)) / (n - 1);
+                         selected_bit = 1'b0;
+                         if (source_pos < m)
+                             selected_bit = gh[source_pos];
+                         else if (source_pos < m + 8)
+                             selected_bit = pc[source_pos - m];
+                         else
+                             selected_bit = ph[source_pos - m - 8];
+                         inter = {inter[31:0], selected_bit};
+                     end
+                 end
+             end
+
+             // Three w-bit chunks. The two upper chunks are rotated
+             // right by funct and funct+1 before XOR folding.
+             remaining = inter;
+             result = remaining[10:0];
+             if (w == 10)
+                 result[10] = 1'b0;
+             rotation = funct;
+             for (chunk_number = 0; chunk_number < 2;
+                  chunk_number = chunk_number + 1) begin
+                 remaining = remaining >> w;
+                 chunk = remaining[10:0];
+                 if (w == 10)
+                     chunk[10] = 1'b0;
+                 rotated = (chunk >> rotation) |
+                           (chunk << (w - rotation));
+                 if (w == 10)
+                     rotated[10] = 1'b0;
+                 result = result ^ rotated;
+                 rotation = (rotation + 1) % w;
+             end
+             ogehl_index = result;
+         end
+     endfunction
+
+     // Exact sign extension from logical counter width to accumulator width.
+     function automatic logic signed [15:0] extend5 (
+         input logic signed [4:0] counter_value
+     );
+         extend5 = {{11{counter_value[4]}}, counter_value};
+     endfunction
+
+     function automatic logic signed [15:0] extend4 (
+         input logic signed [3:0] counter_value
+     );
+         extend4 = {{12{counter_value[3]}}, counter_value};
+     endfunction
+
+     // The original logical counter limits are -16..15 and -8..7.
+     function automatic logic signed [4:0] sat5(
+         input logic signed [4:0] old_value,
+         input logic outcome
+     );
+         if (outcome)
+             sat5 = (old_value == 5'sd15) ? old_value
+                                             : (old_value + 5'sd1);
+         else
+             sat5 = (old_value == 5'sb10000) ? old_value
+                                               : (old_value - 5'sd1);
+     endfunction
+
+     function automatic logic signed [3:0] sat4(
+         input logic signed [3:0] old_value,
+         input logic outcome
+     );
+         if (outcome)
+             sat4 = (old_value == 4'sd7) ? old_value
+                                            : (old_value + 4'sd1);
+         else
+             sat4 = (old_value == 4'sb1000) ? old_value
+                                               : (old_value - 4'sd1);
+     endfunction
+
+     function automatic logic [199:0] advance_global(
+         input logic [199:0] history,
+         input logic outcome
+     );
+         advance_global = {history[198:0], outcome};
+     endfunction
+
+     function automatic logic [15:0] advance_path(
+         input logic [15:0] history,
+         input logic pc_bit0
+     );
+         advance_path = {history[14:0], pc_bit0};
+     endfunction
+
+     // Every valid Fetch instruction receives metadata, including ordinary
+     // instructions and BTB misses; Execute may later discover a CFI.
+     logic [10:0] indicesF [0:7];
+     logic [10:0] indicesD [0:7];
+     logic [10:0] indicesE [0:7];
+
+     logic         validD, validE;
+     logic         consumedF, consumedD, trainedE;
+     logic         raw_predictionD, raw_predictionE;
+     logic         steered_takenD;
+
+     logic         acceptF;
+     logic         resolve_condE, resolve_jumpE, resolve_cfiE;
+     logic         mispredict_trainE, trainE;
+     logic [4:0]   thres_nextE;
+     logic signed [7:0] tc_nextE;
+     logic signed [15:0] prediction_sumF, prediction_sumE;
+     logic         raw_predictionF;
+     logic         steer_takenF;
+     logic [199:0] speculative_globalF;
+     logic [15:0]  speculative_pathF;
+
+     logic signed [4:0] readF0, readF1;
+     logic signed [3:0] readF2, readF3, readF4,
+                        readF5, readF6, readF7;
+
+     // Resolution is counted once even if E stalls. FlushE affects
+     // the next E contents and must not cancel the resident E resolution.
+     assign resolve_condE = validE && InstrValidE && BranchE && !trainedE;
+     assign resolve_jumpE = validE && InstrValidE && !BranchE &&
+                            JumpE && !trainedE;
+     assign resolve_cfiE = resolve_condE || resolve_jumpE;
+     assign BPDirWrongE = resolve_condE && (raw_predictionE != PCSrcE);
+
+     // Exactly the direction the Wally front end actually steered on:
+     // when the BTB misses a conditional branch, it falls through.
+     assign steer_takenF = BPJumpF || (BPBranchF && raw_predictionF);
+
+     // Rebuild Fetch's speculative history in instruction order from
+     // committed E updates, followed by the currently surviving Decode CFI.
+     // This naturally undoes squashed speculative history (including PHR).
+     // Classify Decode with REAL BranchD/JumpD, not BTB guesses.
+     always_comb begin : reconstruct_history
+         speculative_globalF = committed_global_history;
+         speculative_pathF   = committed_path_history;
+
+         // The resolving E instruction is older than D/F. Bypass its
+         // actual outcome to Fetch (the edge commits it exactly once).
+         if (resolve_cfiE) begin
+             speculative_globalF = advance_global(
+                 speculative_globalF, resolve_jumpE ? 1'b1 : PCSrcE);
+             speculative_pathF = advance_path(speculative_pathF, PCE[0]);
+         end
+
+         if (validD && InstrValidD && !consumedD &&
+             !FlushD && !BPWrongE) begin
+             if (BranchD || JumpD) begin
+                 speculative_globalF = advance_global(
+                     speculative_globalF, BranchD ? steered_takenD : 1'b1);
+                 speculative_pathF = advance_path(speculative_pathF, PCD[0]);
+             end
+         end
+     end
+
+     // F can be passed into D while F itself is held; consumedF guards
+     // against ingesting the same held instruction a second time.
+     assign acceptF = InstrValidF && !StallD && !FlushD && !BPWrongE &&
+                      (!StallF || !consumedF);
+
+     // Compute all eight original CBP-1 table indices (even on a fetch
+     // whose BTB does not recognize a branch). These travel F->D->E.
+     always_comb begin : compute_fetch_indices
+         for (int k = 0; k < 8; k = k + 1) begin
+             indicesF[k] = ogehl_index(
+                 PCF[31:0], speculative_globalF, speculative_pathF,
+                 k, int'(UsedHistLength[k]));
+         end
+     end
+
+     // Compute the resolution sum from CURRENT counters at the original
+     // Fetch indices. It must not be recomputed using the current GHR/PHR.
+     always_comb begin : compute_resolution_sum
+         prediction_sumE = 16'sd4;
+         prediction_sumE = prediction_sumE + extend5(T0[indicesE[0]]);
+         prediction_sumE = prediction_sumE + extend5(T1[indicesE[1][9:0]]);
+         prediction_sumE = prediction_sumE + extend4(T2[indicesE[2]]);
+         prediction_sumE = prediction_sumE + extend4(T3[indicesE[3]]);
+         prediction_sumE = prediction_sumE + extend4(T4[indicesE[4]]);
+         prediction_sumE = prediction_sumE + extend4(T5[indicesE[5]]);
+         prediction_sumE = prediction_sumE + extend4(T6[indicesE[6]]);
+         prediction_sumE = prediction_sumE + extend4(T7[indicesE[7]]);
+     end
+
+     // Dynamic threshold fitting is still before the training decision;
+     // strict >63 and <-64 tests are the corrected v1 C++ semantics.
+     always_comb begin : compute_threshold_and_training
+         integer signed tc_work;
+         integer signed theta_work;
+         logic low_confidence;
+         tc_work = int'($signed(TC));
+         theta_work = int'(thresupdate);
+         mispredict_trainE = ((prediction_sumE >= 16'sd0) != PCSrcE);
+         low_confidence =
+             (int'($signed(prediction_sumE)) >= -theta_work) &&
+             (int'($signed(prediction_sumE)) < theta_work);
+
+         if (resolve_condE) begin
+             if (mispredict_trainE) begin
+                 tc_work = tc_work + 1;
+                 if (tc_work > 63) begin
+                     tc_work = 63;
+                     if (theta_work < 31) begin
+                         tc_work = 0;
+                         theta_work = theta_work + 1;
+                     end
+                 end
+             end else if (low_confidence) begin
+                 tc_work = tc_work - 1;
+                 if (tc_work < -64) begin
+                     tc_work = -64;
+                     if (theta_work > 0) begin
+                         theta_work = theta_work - 1;
+                         tc_work = 0;
+                     end
+                 end
+             end
+         end
+         tc_nextE = tc_work[7:0];
+         thres_nextE = theta_work[4:0];
+         trainE = resolve_condE &&
+             (mispredict_trainE ||
+              ((int'($signed(prediction_sumE)) >= -theta_work) &&
+               (int'($signed(prediction_sumE)) < theta_work)));
+     end
+
+     // Forward any E write to the Fetch read, in each of the eight
+     // tables. This matches table state after the same rising edge.
+     always_comb begin : compute_fetch_sum
+         readF0 = T0[indicesF[0]];
+         readF1 = T1[indicesF[1][9:0]];
+         readF2 = T2[indicesF[2]];
+         readF3 = T3[indicesF[3]];
+         readF4 = T4[indicesF[4]];
+         readF5 = T5[indicesF[5]];
+         readF6 = T6[indicesF[6]];
+         readF7 = T7[indicesF[7]];
+         if (trainE) begin
+             if (indicesF[0] == indicesE[0])
+                 readF0 = sat5(readF0, PCSrcE);
+             if (indicesF[1] == indicesE[1])
+                 readF1 = sat5(readF1, PCSrcE);
+             if (indicesF[2] == indicesE[2])
+                 readF2 = sat4(readF2, PCSrcE);
+             if (indicesF[3] == indicesE[3])
+                 readF3 = sat4(readF3, PCSrcE);
+             if (indicesF[4] == indicesE[4])
+                 readF4 = sat4(readF4, PCSrcE);
+             if (indicesF[5] == indicesE[5])
+                 readF5 = sat4(readF5, PCSrcE);
+             if (indicesF[6] == indicesE[6])
+                 readF6 = sat4(readF6, PCSrcE);
+             if (indicesF[7] == indicesE[7])
+                 readF7 = sat4(readF7, PCSrcE);
+         end
+         prediction_sumF = 16'sd4;
+         prediction_sumF = prediction_sumF + extend5(readF0);
+         prediction_sumF = prediction_sumF + extend5(readF1);
+         prediction_sumF = prediction_sumF + extend4(readF2);
+         prediction_sumF = prediction_sumF + extend4(readF3);
+         prediction_sumF = prediction_sumF + extend4(readF4);
+         prediction_sumF = prediction_sumF + extend4(readF5);
+         prediction_sumF = prediction_sumF + extend4(readF6);
+         prediction_sumF = prediction_sumF + extend4(readF7);
+         raw_predictionF = (prediction_sumF >= 16'sd0);
+     end
+
+     // bpred.sv uses only bit 1 of BPDirF for direction selection.
+     assign BPDirF = {raw_predictionF, raw_predictionF};
+
+     // The sole sequential writer of all predictor arrays and state.
+     always_ff @(posedge clk) begin : update_state
+         integer signed ac_work;
+         if (reset) begin
+             for (int i = 0; i < 2048; i = i + 1) begin
+                 T0[i] <= '0;
+                 if (i < 1024)
+                     T1[i] <= '0;
+                 T2[i] <= '0;
+                 T3[i] <= '0;
+                 T4[i] <= '0;
+                 T5[i] <= '0;
+                 T6[i] <= '0;
+                 T7[i] <= '0;
+                 if (i < 1024)
+                     MINITAG[i] <= 1'b0;
+             end
+             committed_global_history <= '0;
+             committed_path_history   <= '0;
+             TC <= '0;
+             AC <= '0;
+             thresupdate <= 5'd8;
+             UsedHistLength[0] <= 8'd0;
+             UsedHistLength[1] <= 8'd3;
+             UsedHistLength[2] <= 8'd5;
+             UsedHistLength[3] <= 8'd8;
+             UsedHistLength[4] <= 8'd12;
+             UsedHistLength[5] <= 8'd19;
+             UsedHistLength[6] <= 8'd31;
+             UsedHistLength[7] <= 8'd49;
+
+             validD <= 1'b0;
+             validE <= 1'b0;
+             consumedF <= 1'b0;
+             consumedD <= 1'b0;
+             trainedE <= 1'b0;
+             raw_predictionD <= 1'b0;
+             raw_predictionE <= 1'b0;
+             steered_takenD <= 1'b0;
+             for (int k = 0; k < 8; k = k + 1) begin
+                 indicesD[k] <= '0;
+                 indicesE[k] <= '0;
+             end
+         end else begin
+             // Actual architectural history, exactly one CFI event per E
+             // resolution, including unconditional jumps and returns.
+             if (resolve_cfiE) begin
+                 committed_global_history <= advance_global(
+                     committed_global_history, resolve_jumpE ? 1'b1 : PCSrcE);
+                 committed_path_history <= advance_path(
+                     committed_path_history, PCE[0]);
+             end
+
+             // F-to-D transfer and guard against a held Fetch reissue.
+             if (!StallF)
+                 consumedF <= 1'b0;
+             else if (acceptF)
+                 consumedF <= 1'b1;
+             if (FlushD || BPWrongE)
+                 consumedF <= 1'b0;
+
+             // D-to-E prediction/index metadata transfer.
+             if (FlushE) begin
+                 validE <= 1'b0;
+                 trainedE <= 1'b0;
+             end else if (!StallE) begin
+                 validE <= validD && InstrValidD && !consumedD &&
+                           !FlushD && !BPWrongE;
+                 if (validD && InstrValidD && !consumedD &&
+                     !FlushD && !BPWrongE) begin
+                     for (int k = 0; k < 8; k = k + 1)
+                         indicesE[k] <= indicesD[k];
+                     raw_predictionE <= raw_predictionD;
+                 end
+                 trainedE <= 1'b0;
+             end else if (resolve_cfiE) begin
+                 // A held Execute CFI is committed/trained once only.
+                 trainedE <= 1'b1;
+             end
+
+             // Decode metadata tracks the exact F index/prediction.
+             if (FlushD || BPWrongE) begin
+                 validD <= 1'b0;
+                 consumedD <= 1'b0;
+             end else if (!StallD) begin
+                 validD <= acceptF;
+                 consumedD <= 1'b0;
+                 if (acceptF) begin
+                     for (int k = 0; k < 8; k = k + 1)
+                         indicesD[k] <= indicesF[k];
+                     raw_predictionD <= raw_predictionF;
+                     steered_takenD <= steer_takenF;
+                 end
+             end else if (!StallE && !FlushE &&
+                          validD && InstrValidD && !consumedD) begin
+                 consumedD <= 1'b1;
+             end
+
+             if (resolve_condE) begin
+                 TC <= tc_nextE;
+                 thresupdate <= thres_nextE;
+                 if (trainE) begin
+                     T0[indicesE[0]] <= sat5(T0[indicesE[0]], PCSrcE);
+                     T1[indicesE[1][9:0]] <= sat5(T1[indicesE[1][9:0]], PCSrcE);
+                     T2[indicesE[2]] <= sat4(T2[indicesE[2]], PCSrcE);
+                     T3[indicesE[3]] <= sat4(T3[indicesE[3]], PCSrcE);
+                     T4[indicesE[4]] <= sat4(T4[indicesE[4]], PCSrcE);
+                     T5[indicesE[5]] <= sat4(T5[indicesE[5]], PCSrcE);
+                     T6[indicesE[6]] <= sat4(T6[indicesE[6]], PCSrcE);
+                     T7[indicesE[7]] <= sat4(T7[indicesE[7]], PCSrcE);
+
+                     if (!indicesE[7][0]) begin
+                         // Tag update also occurs for correct low-confidence
+                         // predictions; AC changes only for mispredictions.
+                         MINITAG[indicesE[7][10:1]] <= PCE[0];
+                         if (mispredict_trainE) begin
+                             ac_work = int'($signed(AC));
+                             if (MINITAG[indicesE[7][10:1]] != PCE[0])
+                                 ac_work = ac_work - 4;
+                             else
+                                 ac_work = ac_work + 1;
+                             if (ac_work < -256) begin
+                                 AC <= 9'sh100;
+                                 UsedHistLength[2] <= 8'd5;
+                                 UsedHistLength[4] <= 8'd12;
+                                 UsedHistLength[6] <= 8'd31;
+                             end else if (ac_work > 255) begin
+                                 AC <= 9'sd255;
+                                 UsedHistLength[2] <= 8'd79;
+                                 UsedHistLength[4] <= 8'd125;
+                                 UsedHistLength[6] <= 8'd200;
+                             end else begin
+                                 AC <= ac_work[8:0];
+                             end
+                         end
+                     end
+                 end
+             end
+         end
+     end
+ endmodule
+
+
+
+Integration assumptions and unavoidable differences
+The supplied bpred.sv provides the needed BranchD/E, JumpD/E, InstrValidD/E, PCSrcE, and BPWrongE signals. The new InstrValidF must accurately identify Fetch instructions whose metadata can advance into Decode. It is not available in the supplied bpred port list, so this module is not yet a drop-in replacement without that connection.
+The implementation also assumes Wally’s normal in-order F/D/E pipeline discipline: a stalled Execute stage cannot permit younger Decode instructions to advance past it. BPWrongE must indicate all relevant wrong-path redirects, including target and instruction-class errors, not only direction mispredictions.
+Unlike serialized O-GEHL, this implementation predicts using in-flight history and trains later at Execute. It carries the eight original Fetch indices forward, but reads the current counters at resolution to calculate the training sum. This is a deliberate pipeline adaptation; exact cycle-by-cycle equivalence with the standalone predictor is not expected when multiple branches overlap. Same-cycle Fetch/Execute table collisions are handled with forwarding.
+The original 32-bit PC indexing is preserved using PCF[31:0]. The original path-history rule also remains PC[0], which is normally zero for aligned RISC-V instruction addresses. No alternative PC-bit mapping has been introduced.
+Verification status
+The generated module has not been compiled, linted, synthesized, or simulated. The highest-priority checks are F/D/E metadata alignment under stalls, correct recovery when BPWrongE flushes Decode, unconditional-jump history insertion, one-time Execute training during stalls, and the distinction between Fetch prediction and the Execute-time training sum.
+The standalone ogehl_ref v1 remains separate and unchanged.

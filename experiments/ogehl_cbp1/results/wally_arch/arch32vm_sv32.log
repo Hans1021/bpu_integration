@@ -1,0 +1,42 @@
+rv32i_m/vm_sv32/src/mstatus_tvm_test.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/satp_access_tests.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_A_and_D_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_A_and_D_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_U_Bit_set_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_U_Bit_unset_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_U_Bit_unset_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_VA_all_ones_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_VA_all_zeros_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_global_pte_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_global_pte_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_invalid_pte_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_invalid_pte_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_misaligned_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_misaligned_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_mprv_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_mprv_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_mprv_U_set_sum_set_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_mprv_U_set_sum_unset_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_mprv_bare_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_mxr_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_mxr_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_nleaf_pte_level0_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_nleaf_pte_level0_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_reserved_rsw_pte_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_reserved_rsw_pte_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_reserved_rwx_pte_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_reserved_rwx_pte_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_sum_set_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_sum_set_U_Bit_unset_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_sv32/src/vm_sum_unset_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_pmp/src/sv32_pmp_on_pa_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_pmp/src/sv32_pmp_on_pa_U_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_pmp/src/sv32_pmp_on_pte_S_mode.S succeeded.  Brilliant!!!
+rv32i_m/vm_pmp/src/sv32_pmp_on_pte_U_mode.S succeeded.  Brilliant!!!
+SUCCESS! All tests ran without failures.
+- /home/hansyang/projects/bpu_integration/cvw/testbench/testbench.sv:510: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.036 2025-04-27
+- Verilator: $finish at 2us; walltime 30.249 s; speed 51.777 ns/s
+- Verilator: cpu 31.002 s on 1 threads; alloced 326 MB
+Config=bpred_OGEHL_LLM_rv32gc tests=arch32vm_sv32 sim=verilator gui=False args='' params='' define=''
+Running Verilator on bpred_OGEHL_LLM_rv32gc arch32vm_sv32

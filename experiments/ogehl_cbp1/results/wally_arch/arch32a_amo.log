@@ -1,0 +1,16 @@
+rv32i_m/A/src/amoadd.w-01.S succeeded.  Brilliant!!!
+rv32i_m/A/src/amoand.w-01.S succeeded.  Brilliant!!!
+rv32i_m/A/src/amomax.w-01.S succeeded.  Brilliant!!!
+rv32i_m/A/src/amomaxu.w-01.S succeeded.  Brilliant!!!
+rv32i_m/A/src/amomin.w-01.S succeeded.  Brilliant!!!
+rv32i_m/A/src/amominu.w-01.S succeeded.  Brilliant!!!
+rv32i_m/A/src/amoor.w-01.S succeeded.  Brilliant!!!
+rv32i_m/A/src/amoswap.w-01.S succeeded.  Brilliant!!!
+rv32i_m/A/src/amoxor.w-01.S succeeded.  Brilliant!!!
+SUCCESS! All tests ran without failures.
+- /home/hansyang/projects/bpu_integration/cvw/testbench/testbench.sv:510: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.036 2025-04-27
+- Verilator: $finish at 143ns; walltime 0.473 s; speed 306.914 ns/s
+- Verilator: cpu 0.468 s on 1 threads; alloced 326 MB
+Config=bpred_OGEHL_LLM_rv32gc tests=arch32a_amo sim=verilator gui=False args='' params='' define=''
+Running Verilator on bpred_OGEHL_LLM_rv32gc arch32a_amo

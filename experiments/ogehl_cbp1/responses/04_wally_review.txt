@@ -1,0 +1,205 @@
+Architectural review of ogehl_wally.sv
+Verdict: the current implementation is not ready for integration, despite passing lint. Its O-GEHL arithmetic and adaptation rules largely match standalone v1, but several pipeline-management assumptions are not established, and at least two issues can cause functional discrepancies.
+The main findings are:
+- InstrValidF is not necessarily required as a new external port. What is required is a trustworthy indication that Fetch metadata belongs to an instruction being transferred into Decode.
+- Using BPWrongE in the Fetch prediction logic is not inherently a combinational loop in the supplied bpred.sv, but it creates a timing dependency that should be simplified.
+- The existing consumedD and validE handling can lose alignment with Wally under certain stall/flush combinations.
+- The module handles Execute-stage actual outcomes, but full wrong-path recovery and instruction-class correction still depend on Wally's redirect and flush behavior.
+- Recomputing the prediction sum at Execute can change O-GEHL's training decision. This should be corrected by carrying the original prediction sum alongside the eight indices.
+I recommend retaining the original O-GEHL indexing and arithmetic functions, but redesigning the pipeline bookkeeping before connecting the module to bpred.sv.
+The following findings distinguish definite RTL issues from integration assumptions that need confirmation against Wally's pipeline logic.
+1. Is InstrValidF necessary?
+Finding: No, not necessarily. The added port is premature.
+The current module uses:
+assign acceptF = InstrValidF && !StallD && !FlushD &&
+                 !BPWrongE && (!StallF || !consumedF);
+
+
+But O-GEHL does not need to know that a fetched instruction is a valid branch to calculate its direction or indices. It can perform the combinational lookup for the current Fetch PC unconditionally.
+The important requirement is that metadata be captured using the same clock enable and flush conditions as Wally's instruction and PC pipeline registers.
+Proposed correction
+- Calculate all eight indices and the prediction sum combinationally.
+- Capture the metadata into Decode when Wally transfers the corresponding Fetch instruction into Decode.
+- Use the existing InstrValidD to qualify Decode's speculative history contribution.
+- Use InstrValidE to qualify resolution and training.
+- Remove the invented InstrValidF port unless inspection of the IFU establishes a genuine need for it.
+Capturing metadata for an invalid instruction is harmless provided it cannot affect history, training, or adaptation while the corresponding stage's instruction-valid signal is false.
+If a design instead commits speculative history changes directly at Fetch, it requires a genuine Fetch-valid/accept indication. That would need to be derived from the actual IFU instruction availability, Fetch-to-Decode transfer, and squash controls—not simply tied to 1'b1.
+Additional source needed: ifu.sv, specifically the generation of InstrValidD, the Fetch-to-Decode instruction/PC registers, and their enable and clear signals.
+2. Can BPWrongE create combinational feedback?
+Finding: No direct combinational cycle is evident in the supplied bpred.sv, but the dependency is unnecessarily risky.
+Your confirmed logic is:
+assign BPWrongE =
+    (PCCorrectE != PCD) & InstrValidE & InstrValidD;
+
+
+The relevant paths are:
+Current dependency
+PCCorrectE, PCD, InstrValidE/D
+
+BPWrongE
+
+Speculative-history reconstruction
+O-GEHL indices, prediction, BPDirF
+
+Fetch next-PC selection
+
+Assuming PCD and the stage-valid signals are registered, this is a forward combinational path rather than a closed loop.
+In the supplied bpred.sv, BPWrongE does not depend directly on BPDirF or BPDirWrongE. If PCD is a registered Decode PC, that breaks the potential loop.
+Nevertheless, two concerns remain.
+First, the path from Execute correction through history reconstruction, eight index functions, eight counter reads, and next-PC selection is potentially very long.
+Second, the predictor unnecessarily uses BPWrongE as both a squash input and part of its Fetch prediction calculation.
+Proposed correction
+Use Wally's actual stage flush controls to invalidate pipeline metadata. Keep redirect recovery and speculative-history repair conceptually separate from ordinary Fetch prediction.
+Where same-cycle Execute bypass is necessary, its inputs should come directly from registered Execute metadata and resolved outcomes. Avoid feeding an externally calculated next-PC error into Fetch prediction unless a specific correctness requirement demands it.
+A same-cycle BPWrongE history repair is not inherently incorrect, but it needs to be checked against the whole next-PC path before adoption.
+3. Metadata alignment across stalls and flushes
+Finding: The existing implementation has an unresolved metadata-alignment risk.
+The current code captures indicesF into indicesD, and then transfers indicesD to indicesE.
+That general approach is correct. The problem is the separate handling of validD, validE, consumedF, and consumedD.
+For example, the Execute transfer uses:
+validE <= validD && InstrValidD && !consumedD &&
+          !FlushD && !BPWrongE;
+
+
+FlushD ordinarily controls what enters or remains in Decode. It does not necessarily mean that the instruction currently in Decode must be prevented from advancing to Execute.
+If Wally asserts FlushD while a valid Decode instruction is legitimately transferring to Execute and FlushE is low, this expression would discard the predictor metadata while Wally advances the instruction.
+That produces an actual branch in Execute without corresponding valid prediction metadata.
+The reverse problem is possible if metadata advances while Wally holds the instruction.
+Proposed correction
+Use identical transfer conditions for the instruction and its prediction metadata.
+Pipeline condition	Required metadata behavior
+Normal F→D transfer	Capture all eight indices, prediction sum, and direction
+StallD	Hold Decode metadata
+Normal D→E transfer	Move Decode metadata to Execute
+StallE	Hold Execute metadata
+Decode bubble	Mark Decode metadata invalid
+Execute bubble	Mark Execute metadata invalid
+Squashed instruction	Discard its metadata
+Execute event already processed	Prevent duplicate training and history insertion
+The consumedD mechanism may be needed if Wally permits a held Decode instruction to transfer into Execute while Decode remains stalled. However, that is a pipeline-specific behavior, not something to infer from the GShare example.
+I would retain duplicate-processing protection only after examining the actual StallD/StallE and stage-register behavior.
+There is another concern: if FlushE represents an older exception squashing the instruction currently in Execute, the current code can still train that Execute instruction because resolve_condE is not qualified by an older-instruction kill condition. Conversely, suppressing every resolution whenever FlushE is asserted could discard a legitimate resolving branch. The correct qualification depends on Wally's flush semantics.
+Additional source needed: hazard.sv and the pipeline register logic, particularly the relationships among StallD, StallE, FlushD, FlushE, exceptions, and the valid bits.
+4. Wrong-target and instruction-class recovery
+Finding: The proposed reconstruction is directionally appropriate but incomplete as a demonstrated recovery mechanism.
+A strength of the current design is that it uses actual Execute outcomes to rebuild history:
+if (resolve_cfiE) begin
+    speculative_globalF = advance_global(
+        speculative_globalF, resolve_jumpE ? 1'b1 : PCSrcE);
+    speculative_pathF = advance_path(speculative_pathF, PCE[0]);
+end
+
+
+This correctly represents a resolved conditional branch using its actual outcome and a resolved unconditional branch using a taken bit.
+Also, BPWrongE is based on an incorrect next PC rather than only incorrect branch direction. Therefore, it can identify wrong targets and wrong instruction-class predictions that produce a different next PC.
+However, its dependence on InstrValidD matters: when InstrValidD=0, BPWrongE=0 regardless of the PC mismatch. It is not an unconditional indication that every wrong-path instruction has been detected or removed.
+An additional potential issue is the classification of calls and returns. The supplied bpred.sv carries CallD/E and ReturnD/E separately from JumpD/E. The generated O-GEHL module only tests JumpD/E. We need to confirm that Wally's JumpD/E includes all calls and returns; otherwise O-GEHL will omit legitimate unconditional control-flow events from its histories.
+Proposed correction
+Recovery must cover the following cases:
+- Conditional direction misprediction.
+- Correct direction but incorrect BTB target.
+- Incorrect predicted instruction class.
+- Unconditional calls, returns, and indirect jumps.
+- Pipeline flushes caused by older exceptions or other redirects.
+The recovery mechanism should preserve all older valid events and discard all younger squashed history contributions, while preventing training of squashed instructions.
+Additional source needed: icpred.sv, to establish exactly what BranchD/E, JumpD/E, CallD/E, and ReturnD/E mean.
+5. Comparison against standalone O-GEHL v1
+I compared the actual generated files, including the complete indexing and sign-extension functions.
+Algorithm component	Finding
+Eight prediction tables	Identical logical sizes and widths
+Table reset values	Preserved
+ogehl_index()	Textually identical to v1
+Distributed selection	Preserved
+XOR folding and rotations	Preserved
+extend4() and extend5()	Textually identical to v1
+Prediction bias and sign test	Preserved
+Counter saturation	Equivalent operations via sat4() / sat5()
+Threshold fitting	Corrected strict TC > 63 / TC < -64 boundaries preserved
+Threshold-before-training ordering	Preserved
+T7 even-index alias checking	Preserved
+MINITAG comparison and update	Preserved
+AC saturation and history selection	Preserved
+Global/path history update	Adapted for speculative execution
+Training prediction sum	Behaviorally different under overlapping updates
+History-length visibility at Fetch	Same-cycle adaptation bypass missing
+The last two items are important.
+When Execute changes the dynamic history-length selection, Fetch currently calculates its indices using the old UsedHistLength values. If the intended ordering is for Fetch to observe the resolving Execute branch's updates in that cycle, the next Fetch index should use the post-Execute history-length selection.
+I recommend calculating prospective history lengths for the Fetch lookup when an Execute alias-counter saturation will switch T2, T4, and T6. That would preserve the original adaptation decision while resolving this additional pipeline dependency.
+6. Execute-time prediction sum is a functional discrepancy
+Finding: This is a definite algorithmic consistency problem.
+The standalone v1 computes its prediction sum and trains using the same pre-update predictor state.
+The Wally version instead captures Fetch indices but recomputes the sum from current table counters at Execute:
+prediction_sumE = 16'sd4;
+prediction_sumE = prediction_sumE + extend5(T0[indicesE[0]]);
+// ... remaining tables
+
+
+An older branch may have trained one or more of these entries between the younger branch's Fetch and Execute stages.
+For example:
+Example: prediction-sum crossing
+At Fetch0
+Predicted taken
+
+
+At Execute−1
+Recomputed not-taken
+
+
+
+Suppose an older branch decrements a shared counter between these stages, and the younger branch's actual outcome is taken.
+
+Actual Fetch prediction
+Correct
+
+Current Execute training logic
+Misprediction
+
+
+The consequences are not limited to counter training. Incorrectly classifying this event as a misprediction also changes TC, potentially changes thresupdate, and can change AC and the active history lengths.
+Even without crossing zero, the recomputed sum could cross the low-confidence boundary, changing which events qualify for training.
+Proposed correction
+Capture the signed 16-bit Fetch prediction sum alongside the eight table indices and predicted direction. Carry all of this metadata through Decode into Execute.
+At Execute, use the preserved sum to determine prediction correctness, threshold fitting, and training eligibility, while using the preserved Fetch indices to select counters for saturation updates.
+This keeps prediction and training decisions consistent for the same branch.
+One limitation remains fundamental: with overlapping branches, Fetch may not see all older branches' eventual training updates. Saving the Fetch sum restores prediction/update consistency but does not make the pipelined predictor strictly equivalent to the serialized CBP-1 model in every branch sequence. Achieving exact sequential reference behavior would require serializing prediction behind older unresolved branches or a more involved replay mechanism.
+7. Additional Wally source files needed
+I recommend obtaining these files from the exact Wally revision being integrated, since newer upstream versions may have different pipeline and prediction conventions.
+File	Exact signals or behavior to inspect
+ifu.sv	PCF, PCNextF, PCD, InstrValidD, actual Fetch-to-Decode transfer and instruction availability
+hazard.sv	StallF/D/E, FlushD/E/M, branch redirect, exception flush and squash priority
+btb.sv	Lookup timing, PCNextF versus PCF, target/class alignment with BPDirF
+icpred.sv	BPBranchF, BPJumpF, actual versus predicted jump/call/return classification
+controller.sv / relevant IEU control	BranchD/E, JumpD/E, PCSrcE, including call and return semantics
+Core pipeline wiring / stage registers	Sources and timing of InstrValidD/E, stage-PC registers, and valid/kill propagation
+There is a particularly important alignment question: bpred.sv supplies PCNextF to the BTB while the proposed O-GEHL implementation indexes using PCF. This is not automatically incorrect, since the structures may have different lookup latencies, but their predictions must refer to the same instruction when BPBranchF, BPJumpF, and BPDirF are combined. Inspecting btb.sv and ifu.sv will settle that.
+8. Recommended correction priorities
+
+Priority 1 — Training correctness
+Preserve the Fetch prediction sum through Execute. Use it consistently for training eligibility, misprediction detection, and threshold/alias adaptation.
+
+
+
+
+Priority 2 — Pipeline metadata correctness
+Match Wally's actual F→D and D→E transfers. Remove assumptions about InstrValidF and independently maintained valid bits unless justified by the pipeline.
+
+
+
+
+Priority 3 — Recovery and control-flow completeness
+Verify all unconditional CFI classes, wrong-target corrections, older-instruction squashes, and exactly-once history updates.
+
+
+
+
+Priority 4 — Same-cycle adaptation visibility
+Forward dynamic history-length selection to Fetch when an older Execute event changes the active lengths.
+
+
+
+Conclusion
+I recommend not integrating the current ogehl_wally.sv yet.
+The core O-GEHL table organization, indexing, signed arithmetic, and adaptation calculations are substantially preserved. The principal risks are in how predictor metadata is associated with instructions, which prediction sum governs training, and how speculative control-flow events are retained or removed under Wally's pipeline controls.
+The next useful inputs are ifu.sv, hazard.sv, btb.sv, and icpred.sv from the target Wally revision. Those should be sufficient to resolve the most consequential interface assumptions before producing revised RTL.
+No replacement RTL has been generated, and the verified standalone ogehl_ref v1 remains unchanged.

@@ -1,0 +1,17 @@
+PASS: Reset clears committed history
+PASS: Reset initializes O-GEHL threshold
+PASS: Fetch metadata captured in Decode
+PASS: Decode metadata captured in Execute
+PASS: Resolved taken branch updates global history
+PASS: Taken branch updates threshold counter once
+PASS: Stalled Execute branch does not train
+PASS: Stalled Execute branch does not commit history
+PASS: Released Execute branch trains once
+PASS: Released Execute branch commits once
+PASS: Older Memory flush prevents training
+PASS: Older Memory flush prevents history commit
+PASS: 12 checks completed
+- experiments/ogehl_cbp1/verification/tb_ogehl_wally.sv:175: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.036 2025-04-27
+- Verilator: $finish at 150ns; walltime 0.001 s; speed 69.486 us/s
+- Verilator: cpu 0.002 s on 1 threads; alloced 89 MB

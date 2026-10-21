@@ -1,0 +1,94 @@
+Review result: ogehl_wally_v1.sv against the exact Wally files
+Overall finding: The new hazard.sv and btb.sv confirm that most of v1's pipeline-control assumptions are correct. I found no definite persistent metadata-alignment or BTB-addressing bug from these two files. However, the speculative-history calculation can temporarily include squashed instructions, and several recovery corner cases remain unverified without the IFU logic.
+I recommend retaining v1 as the baseline for the next revision, rather than redesigning the pipeline bookkeeping again.
+1. Stall and flush handling
+Confirmed alignment
+The supplied hazard.sv establishes:
+assign StallF = StallFCause | StallD;
+assign StallD = StallDCause | StallE;
+assign StallE = StallECause | StallM;
+
+assign FlushE = LatestUnstalledE | FlushECause;
+assign FlushM = LatestUnstalledM | FlushMCause;
+
+
+Since StallFCause is always zero, StallF == StallD in this revision. Consequently, the O-GEHL module does not need a separate StallF input simply to capture Fetch metadata.
+The v1 metadata rules also match the clear-before-enable behavior assumed by the BTB's flopenrc pipeline registers.
+Crucially, the independent Decode and Execute controls are correct: FlushD does not automatically prevent the existing Decode instruction from advancing to Execute. FlushE determines whether Execute receives a bubble.
+There is one clarification needed in the v1 comments: FlushM is not exclusively an older Memory-stage kill. It can also be a bubble inserted because Execute is stalled while Memory advances:
+assign LatestUnstalledM = ~StallM & StallE;
+assign FlushM = LatestUnstalledM | FlushMCause;
+
+
+This does not create a demonstrated functional bug because a held Execute instruction should not train in that case.
+2. Fetch and BTB alignment
+Confirmed alignment
+The supplied btb.sv uses:
+.ra1(PCNextFIndex)
+.rd1(TableBTBPredF)
+.ce1(~StallF | reset)
+
+
+The synchronous lookup is prepared with PCNextF, but its prediction is consumed in the Fetch stage associated with PCF. Forwarding also compares the current PCFIndex against Decode, Execute, Memory, and Writeback indices.
+Therefore, the v1 O-GEHL calculation using PCF[31:0] is correctly aligned with the BTB's intended Fetch-stage prediction.
+It should not be changed to index with PCNextF merely because the BTB RAM uses that address.
+The stall controls agree as well: the BTB holds its read when StallF is asserted, and O-GEHL holds its Decode metadata when StallD is asserted. Those stall signals are equal in this hazard implementation.
+The remaining detail to verify is whether IFU redirects and instruction-valid transitions always preserve this PC association, especially across cache misses.
+3. Execute resolution versus Memory-stage kills
+Control logic consistent
+The v1 resolution qualification is:
+assign retire_or_self_flushE =
+    !FlushM && (!StallE || FlushE);
+
+
+This is consistent with the supplied hazard equations for the important cases.
+Situation	Execute predictor update
+Execute advances normally	Allowed
+Execute is held by an ordinary stall	Suppressed
+Decode stalls and Execute advances into a bubble	Allowed for the resident E instruction
+Execute branch causes its own redirect/flush	Allowed
+Older Memory trap, return, CSR write or fence flushes Execute	Suppressed
+Importantly, Wally's hazard unit can flush Execute because of its own branch redirect while preserving the validity of that branch's resolution.
+Therefore, simply adding !FlushE to resolve_condE would be incorrect.
+The unresolved corner case is a self-redirecting Execute instruction during downstream backpressure, when FlushE=1, StallE=1, and FlushM=0. The v1 code processes that instruction once because the pipeline will clear its Execute slot. Whether Wally reliably preserves the corresponding PC redirect when Fetch is also stalled requires inspection of the IFU PC-update priority.
+This is a verification concern, not a demonstrated O-GEHL bug from the supplied files.
+4. Speculative global/path history reconstruction
+Correction recommended
+The v1 reconstruction adds valid Execute and Decode control-flow events without checking whether an older event is simultaneously squashing them.
+Consequently:
+- When an Execute branch causes BPWrongE, the younger Decode instruction may still contribute to the combinational speculative history during that cycle.
+- When an older Memory instruction causes a pipeline flush, Execute and Decode instructions may still contribute before the clock edge clears their metadata.
+This is a definite transient inclusion of squashed instructions, but not yet evidence of persistent predictor-state corruption.
+For an ordinary Execute misprediction, bpred.sv selects PCCorrectE rather than the current Fetch prediction. FlushD and FlushE then clear younger metadata at the rising edge. On the following cycle, reconstruction no longer includes those instructions.
+Similarly, an older Memory-stage flush suppresses Execute updates through FlushM.
+Recommended correction
+Separate speculative-history reconstruction into two cases: the history for accepted Fetch metadata, and the history temporarily observable during a flush.
+For accepted Fetch metadata, ensure every contributing older event survives the corresponding pipeline kill condition. Do not blindly add !FlushM to the Execute history contribution, because FlushM can represent a bubble rather than an older squash.
+The best solution will depend on the IFU's Fetch acceptance and redirect priority. It may be sufficient to leave the combinational wrong-path value unconstrained while ensuring it can never be captured or used for a surviving instruction.
+That is preferable to adding flush-dependent logic to the critical Fetch prediction path without demonstrating that it is needed.
+5. Definite bugs versus remaining concerns
+Classification	Finding	Required action
+Confirmed correct	StallF == StallD	No extra StallF port required
+Confirmed correct	Independent FlushD and FlushE metadata handling	Preserve
+Confirmed correct	BTB PCNextF preaddress versus O-GEHL PCF prediction	Preserve
+Confirmed correct	Execute training uses saved Fetch sum and indices	Preserve
+Confirmed correct	Older Memory flush suppresses Execute training	Preserve
+Definite transient issue	Squashed D/E events may enter combinational history during a flush	Verify that these values are never accepted; optionally qualify reconstruction
+Comment/interpretation error	FlushM does not always signify an older Memory kill	Correct explanatory comments
+Verification concern	Execute self-redirect during a Memory/IFU stall	Check IFU redirect and PC register priorities
+Verification concern	Fetch metadata validity across bubbles/cache misses	Check InstrValidD/E generation
+Verification concern	BTB instruction-class prediction versus real Decode classification	Check icpred.sv
+Verification concern	BPWrongE requires both InstrValidD and InstrValidE	Verify Wally guarantees a valid younger Decode instruction when correction is necessary
+6. Additional interface changes
+No new predictor port is definitively required by hazard.sv or btb.sv.
+The previously added FlushM, CallD/E, and ReturnD/E connections remain appropriate. InstrValidF does not need to be reintroduced based on these files.
+However, full integration verification still requires:
+- ifu.sv: PC register updates, redirect priority, Fetch acceptance, and generation of instruction-valid signals.
+- icpred.sv: exact relationships between branch, jump, call, and return classification.
+- The stage-register implementation (flopenrc.sv or the corresponding register library), to confirm the assumed reset/clear/enable priorities.
+The most important outstanding question is whether a Fetch result can survive when an older instruction is redirecting or killing the pipeline. If it cannot, the transient speculative-history inclusion is harmless; if it can, recovery qualification must be strengthened.
+Conclusion
+No replacement RTL is justified solely by a BTB index mismatch or an incorrect stall/flush priority—the new files support those parts of v1.
+The next revision should focus narrowly on verifying and, if necessary, correcting speculative-history qualification during redirects. The remaining edge cases depend on the actual IFU pipeline behavior.
+The original indexing, Fetch-sum metadata, threshold fitting, alias handling, and dynamic history-length forwarding should remain unchanged.
+No replacement RTL was generated, and no new simulation or integration verification was performed.

@@ -1,0 +1,32 @@
+Cnt[ 0] = 2538156 Mcycle
+Cnt[ 1] =       0 ------
+Cnt[ 2] = 2332419 InstRet
+Cnt[ 3] =  544647 Br Count
+Cnt[ 4] =   23986 Jump Not Return
+Cnt[ 5] =    1258 Return
+Cnt[ 6] =   35235 BP Wrong
+Cnt[ 7] =   35124 BP Dir Wrong
+Cnt[ 8] =     102 BP Target Wrong
+Cnt[ 9] =       5 RAS Wrong
+Cnt[10] =     222 Instr Class Wrong
+Cnt[11] =       0 Load Stall
+Cnt[12] =       0 Store Stall
+Cnt[13] =       0 D Cache Access
+Cnt[14] =       0 D Cache Miss
+Cnt[15] =       0 D Cache Cycles
+Cnt[16] =       0 I Cache Access
+Cnt[17] =       0 I Cache Miss
+Cnt[18] =       0 I Cache Cycles
+Cnt[19] =       0 CSR Write
+Cnt[20] =       0 FenceI
+Cnt[21] =       0 SFenceVMA
+Cnt[22] =       0 Interrupt
+Cnt[23] =       0 Exception
+Cnt[24] =       0 Divide Cycles
+Single Elf file tests are not signatured verified.
+- /home/hansyang/projects/bpu_integration/cvw/testbench/testbench.sv:490: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.036 2025-04-27
+- Verilator: $finish at 25us; walltime 53.103 s; speed 457.665 ns/s
+- Verilator: cpu 55.459 s on 1 threads; alloced 326 MB
+Config=bpred_OGEHL_LLM_rv32gc tests=addins/embench-iot/bd_speedopt_speed/src/huffbench/huffbench.elf sim=verilator gui=False args='' params='PrintHPMCounters=1\'b1' define=''
+Running Verilator on bpred_OGEHL_LLM_rv32gc huffbench_huffbench.elf

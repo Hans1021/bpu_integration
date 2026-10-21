@@ -1,0 +1,27 @@
+PASS: A: Fetch metadata reaches Decode
+PASS: A: metadata reaches Execute
+PASS: B: metadata reaches Decode
+PASS: A: taken outcome committed
+PASS: B: not-taken outcome committed after A
+PASS: Unconditional jump commits taken history
+PASS: Unconditional jump does not alter threshold counter
+PASS: Unconditional jump does not alter threshold
+PASS: Decode metadata initially valid
+PASS: Stalled Decode metadata holds despite FlushD
+PASS: Enabled Decode flush clears metadata
+PASS: Execute branch not trained during stall
+PASS: Execute branch not committed during stall
+PASS: Execute branch trains once after release
+PASS: Execute branch commits once after release
+PASS: Older Memory flush suppresses committed history
+PASS: Older Memory flush suppresses threshold update
+PASS: Execute metadata invalidated by flush
+PASS: Older Execute branch commits during redirect
+PASS: Younger Decode metadata flushed
+PASS: Execute receives bubble after redirect
+PASS: Squashed younger branch never commits
+PASS: 22 extended checks completed
+- experiments/ogehl_cbp1/verification/tb_ogehl_wally_extended.sv:324: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.036 2025-04-27
+- Verilator: $finish at 290ns; walltime 0.003 s; speed 70.344 us/s
+- Verilator: cpu 0.004 s on 1 threads; alloced 89 MB
